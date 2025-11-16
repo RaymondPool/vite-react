@@ -1,11 +1,22 @@
 import { useState } from 'react';
-// Icons removed - using Unicode symbols instead
-const Calculator = () => <span style={{fontSize: '2.5rem'}}>🧮</span>;
-const Clock = () => <span style={{fontSize: '2rem'}}>⏰</span>;
-const DollarSign = () => <span style={{fontSize: '2rem'}}>💰</span>;
-const TrendingUp = () => <span style={{fontSize: '2rem'}}>📈</span>;
-const CheckCircle = () => <span style={{fontSize: '1.5rem'}}>✅</span>;
-const AlertCircle = () => <span style={{fontSize: '2rem'}}>⚠️</span>;
+
+// Simple emoji icons
+const IconAlert = () => <span style={{fontSize: '2rem'}}>⚠️</span>;
+const IconCalculator = () => <span style={{fontSize: '2rem'}}>🧮</span>;
+const IconClock = () => <span style={{fontSize: '2rem'}}>⏰</span>;
+const IconDollar = () => <span style={{fontSize: '2rem'}}>💰</span>;
+const IconTrending = () => <span style={{fontSize: '2rem'}}>📈</span>;
+const IconCheck = () => <span style={{fontSize: '1.5rem'}}>✅</span>;
+
+interface Results {
+  monthlyLoss: string;
+  annualLoss: string;
+  timeSavingsPerMonth: string;
+  monthlySavings: string;
+  annualSavings: string;
+  roi: string;
+  paybackMonths: string;
+}
 
 export default function AIROICalculator() {
   const [step, setStep] = useState('landing');
@@ -15,7 +26,7 @@ export default function AIROICalculator() {
     hourlyRate: '',
     taskName: ''
   });
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<Results | null>(null);
 
   const calculateROI = () => {
     const hours = parseFloat(formData.hoursPerWeek);
@@ -62,7 +73,7 @@ export default function AIROICalculator() {
         <div className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6">
-              <AlertCircle className="w-10 h-10 text-red-600" />
+              <IconAlert />
             </div>
             
             <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
@@ -77,19 +88,19 @@ export default function AIROICalculator() {
           <div className="bg-white rounded-2xl shadow-2xl p-8 mb-12">
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="text-center p-6 bg-red-50 rounded-xl">
-                <Clock className="w-8 h-8 text-red-600 mx-auto mb-3" />
+                <div className="flex justify-center mb-3"><IconClock /></div>
                 <h3 className="font-semibold text-gray-900 mb-2">Wasted Hours</h3>
                 <p className="text-gray-600 text-sm">Your team spends 15-40 hours per week on repetitive tasks that AI could handle</p>
               </div>
               
               <div className="text-center p-6 bg-orange-50 rounded-xl">
-                <DollarSign className="w-8 h-8 text-orange-600 mx-auto mb-3" />
+                <div className="flex justify-center mb-3"><IconDollar /></div>
                 <h3 className="font-semibold text-gray-900 mb-2">Hidden Costs</h3>
                 <p className="text-gray-600 text-sm">Manual processes cost 3-5x more than automated ones when you factor in errors and delays</p>
               </div>
               
               <div className="text-center p-6 bg-yellow-50 rounded-xl">
-                <TrendingUp className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
+                <div className="flex justify-center mb-3"><IconTrending /></div>
                 <h3 className="font-semibold text-gray-900 mb-2">Missed Growth</h3>
                 <p className="text-gray-600 text-sm">While you're stuck in the weeds, competitors are scaling with automation</p>
               </div>
@@ -102,22 +113,22 @@ export default function AIROICalculator() {
               
               <div className="space-y-4 mb-8">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                  <span className="flex-shrink-0 mt-1"><IconCheck /></span>
                   <p className="text-gray-700">Exactly how much money you're hemorrhaging each month on manual processes that could be automated</p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                  <span className="flex-shrink-0 mt-1"><IconCheck /></span>
                   <p className="text-gray-700">How many hours your team could reclaim for high-value work instead of mind-numbing repetition</p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                  <span className="flex-shrink-0 mt-1"><IconCheck /></span>
                   <p className="text-gray-700">Your potential ROI and payback period so you can make a data-driven decision</p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                  <span className="flex-shrink-0 mt-1"><IconCheck /></span>
                   <p className="text-gray-700">A personalized breakdown you can show your team or stakeholders to justify the investment</p>
                 </div>
               </div>
@@ -163,7 +174,7 @@ export default function AIROICalculator() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
         <div className="max-w-2xl mx-auto px-6 py-16">
           <div className="text-center mb-8">
-            <Calculator className="w-16 h-16 text-blue-600 mx-auto mb-4" />
+            <div className="flex justify-center mb-4"><IconCalculator /></div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Let's Calculate Your Loss
             </h2>
@@ -240,7 +251,7 @@ export default function AIROICalculator() {
         <div className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-              <AlertCircle className="w-8 h-8 text-red-600" />
+              <IconAlert />
             </div>
             <h2 className="text-4xl font-bold text-gray-900 mb-2">
               Your Wake-Up Call
@@ -253,8 +264,8 @@ export default function AIROICalculator() {
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
               <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Money Lost Per Month</h3>
-              <p className="text-4xl font-bold text-red-600">${results.monthlyLoss.toLocaleString()}</p>
-              <p className="text-gray-600 mt-2">That's ${results.annualLoss.toLocaleString()} per year going down the drain</p>
+              <p className="text-4xl font-bold text-red-600">${Number(results.monthlyLoss).toLocaleString()}</p>
+              <p className="text-gray-600 mt-2">That's ${Number(results.annualLoss).toLocaleString()} per year going down the drain</p>
             </div>
 
             <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
@@ -272,7 +283,7 @@ export default function AIROICalculator() {
             <div className="grid md:grid-cols-3 gap-6 mb-6">
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <p className="text-sm font-semibold text-gray-600 mb-1">Monthly Savings</p>
-                <p className="text-3xl font-bold text-green-600">${results.monthlySavings.toLocaleString()}</p>
+                <p className="text-3xl font-bold text-green-600">${Number(results.monthlySavings).toLocaleString()}</p>
               </div>
 
               <div className="text-center p-4 bg-green-50 rounded-lg">
@@ -289,10 +300,10 @@ export default function AIROICalculator() {
             <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
               <h4 className="font-bold text-gray-900 mb-3">Bottom Line:</h4>
               <p className="text-gray-700 mb-4">
-                By continuing to do "{formData.taskName}" manually, you're losing ${results.monthlyLoss.toLocaleString()} every single month. That's money that could be reinvested in growth, innovation, or your bottom line.
+                By continuing to do "{formData.taskName}" manually, you're losing ${Number(results.monthlyLoss).toLocaleString()} every single month. That's money that could be reinvested in growth, innovation, or your bottom line.
               </p>
               <p className="text-gray-700 font-semibold">
-                With AI automation, you'd break even in {results.paybackMonths} months and save ${results.annualSavings.toLocaleString()} annually after that.
+                With AI automation, you'd break even in {results.paybackMonths} months and save ${Number(results.annualSavings).toLocaleString()} annually after that.
               </p>
             </div>
           </div>
@@ -321,4 +332,6 @@ export default function AIROICalculator() {
       </div>
     );
   }
+
+  return null;
 }
