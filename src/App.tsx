@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Calculator, Clock, DollarSign, TrendingUp, CheckCircle, AlertCircle } from 'lucide-react';
+// Icons removed - using Unicode symbols instead
+const Calculator = () => <span style={{fontSize: '2.5rem'}}>🧮</span>;
+const Clock = () => <span style={{fontSize: '2rem'}}>⏰</span>;
+const DollarSign = () => <span style={{fontSize: '2rem'}}>💰</span>;
+const TrendingUp = () => <span style={{fontSize: '2rem'}}>📈</span>;
+const CheckCircle = () => <span style={{fontSize: '1.5rem'}}>✅</span>;
+const AlertCircle = () => <span style={{fontSize: '2rem'}}>⚠️</span>;
 
 export default function AIROICalculator() {
   const [step, setStep] = useState('landing');
