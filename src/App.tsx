@@ -20,7 +20,10 @@ interface Results {
 
 export default function AIROICalculator() {
   const [step, setStep] = useState('landing');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(() => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('email') || '';
+  });
   const [formData, setFormData] = useState({
     hoursPerWeek: '',
     hourlyRate: '',
