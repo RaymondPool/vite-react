@@ -318,9 +318,14 @@ export default function AIROICalculator() {
             <p className="text-xl mb-6 text-blue-100">
               Let's talk about automating your processes and putting that money back in your pocket
             </p>
-            <button className="px-8 py-4 bg-white text-blue-600 font-bold text-lg rounded-lg hover:bg-gray-100 transition-colors shadow-lg">
+            <a 
+              href="https://bayoubiz.systeme.io/6b581a10"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-8 py-4 bg-white text-blue-600 font-bold text-lg rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
+            >
               Schedule a Free Strategy Call
-            </button>
+            </a>
             <p className="text-sm text-blue-100 mt-4">
               No sales pitch. Just a real conversation about what's possible for your business.
             </p>
