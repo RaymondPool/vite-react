@@ -72,7 +72,7 @@ export default function AIROICalculator() {
 
   if (step === 'landing') {
     return (
-      <div className="min-h-screen bg-white">
+      <div style={{minHeight: '100vh', backgroundColor: '#ffffff'}}>
         <div className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6">
@@ -97,7 +97,7 @@ export default function AIROICalculator() {
               </div>
               
               <div className="text-center p-6 bg-white rounded-xl border border-gray-200">
-                <div className="flex justify-center mb-3"><IconDollar /></div>
+              <div className="flex justify-center mb-3"><IconDollar /></div>
                 <h3 className="font-semibold text-gray-900 mb-2">Hidden Costs</h3>
                 <p className="text-gray-600 text-sm">Manual processes cost 3-5x more than automated ones when you factor in errors and delays</p>
               </div>
@@ -174,7 +174,7 @@ export default function AIROICalculator() {
 
   if (step === 'calculator') {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div style={{minHeight: '100vh', backgroundColor: '#f9fafb'}}>
         <div className="max-w-2xl mx-auto px-6 py-16">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4"><IconCalculator /></div>
@@ -250,7 +250,7 @@ export default function AIROICalculator() {
 
   if (step === 'results' && results) {
     return (
-      <div className="min-h-screen bg-gray-50">
+     <div style={{minHeight: '100vh', backgroundColor: '#f9fafb'}}> 
         <div className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
