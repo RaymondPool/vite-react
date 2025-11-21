@@ -72,37 +72,37 @@ export default function AIROICalculator() {
 
   if (step === 'landing') {
     return (
-        <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
         <div className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6">
               <IconAlert />
             </div>
             
-            <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
               Calculate How Much Money You're Losing Every Month Without AI Automation
             </h1>
             
-            <p className="text-2xl text-gray-700 mb-8">
-              Find out in 60 seconds what manual tasks are quietly draining your budget and your team's time
+            <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+              60-second calculator shows exactly how much you're losing right now
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-2xl p-8 mb-12">
+          <div className="bg-gray-50 rounded-2xl shadow-xl p-8 mb-12 max-w-3xl mx-auto">
             <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <div className="text-center p-6 bg-red-50 rounded-xl">
+              <div className="text-center p-6 bg-white rounded-xl border border-gray-200">
                 <div className="flex justify-center mb-3"><IconClock /></div>
                 <h3 className="font-semibold text-gray-900 mb-2">Wasted Hours</h3>
                 <p className="text-gray-600 text-sm">Your team spends 15-40 hours per week on repetitive tasks that AI could handle</p>
               </div>
               
-              <div className="text-center p-6 bg-orange-50 rounded-xl">
+              <div className="text-center p-6 bg-white rounded-xl border border-gray-200">
                 <div className="flex justify-center mb-3"><IconDollar /></div>
                 <h3 className="font-semibold text-gray-900 mb-2">Hidden Costs</h3>
                 <p className="text-gray-600 text-sm">Manual processes cost 3-5x more than automated ones when you factor in errors and delays</p>
               </div>
               
-              <div className="text-center p-6 bg-yellow-50 rounded-xl">
+              <div className="text-center p-6 bg-white rounded-xl border border-gray-200">
                 <div className="flex justify-center mb-3"><IconTrending /></div>
                 <h3 className="font-semibold text-gray-900 mb-2">Missed Growth</h3>
                 <p className="text-gray-600 text-sm">While you're stuck in the weeds, competitors are scaling with automation</p>
@@ -146,7 +146,7 @@ export default function AIROICalculator() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@company.com"
-                    className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                    className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
                   />
                   <button
                     onClick={handleEmailSubmit}
@@ -174,7 +174,7 @@ export default function AIROICalculator() {
 
   if (step === 'calculator') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+      <div className="min-h-screen bg-gray-50">
         <div className="max-w-2xl mx-auto px-6 py-16">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4"><IconCalculator /></div>
@@ -197,7 +197,7 @@ export default function AIROICalculator() {
                   value={formData.taskName}
                   onChange={(e) => setFormData({...formData, taskName: e.target.value})}
                   placeholder="e.g., Data entry, report generation, email responses"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
                 />
               </div>
 
@@ -211,7 +211,7 @@ export default function AIROICalculator() {
                   value={formData.hoursPerWeek}
                   onChange={(e) => setFormData({...formData, hoursPerWeek: e.target.value})}
                   placeholder="10"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
                 />
               </div>
 
@@ -227,7 +227,7 @@ export default function AIROICalculator() {
                     value={formData.hourlyRate}
                     onChange={(e) => setFormData({...formData, hourlyRate: e.target.value})}
                     placeholder="50"
-                    className="w-full pl-8 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                    className="w-full pl-8 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
                   />
                 </div>
                 <p className="text-sm text-gray-500 mt-1">
@@ -250,7 +250,7 @@ export default function AIROICalculator() {
 
   if (step === 'results' && results) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
+      <div className="min-h-screen bg-gray-50">
         <div className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
@@ -284,17 +284,17 @@ export default function AIROICalculator() {
             </h3>
 
             <div className="grid md:grid-cols-3 gap-6 mb-6">
-              <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
                 <p className="text-sm font-semibold text-gray-600 mb-1">Monthly Savings</p>
                 <p className="text-3xl font-bold text-green-600">${Number(results.monthlySavings).toLocaleString()}</p>
               </div>
 
-              <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
                 <p className="text-sm font-semibold text-gray-600 mb-1">Annual ROI</p>
                 <p className="text-3xl font-bold text-green-600">{results.roi}%</p>
               </div>
 
-              <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
                 <p className="text-sm font-semibold text-gray-600 mb-1">Payback Period</p>
                 <p className="text-3xl font-bold text-green-600">{results.paybackMonths} mo</p>
               </div>
@@ -311,14 +311,14 @@ export default function AIROICalculator() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-2xl p-8 text-center text-white">
+          <div className="bg-blue-600 rounded-xl shadow-2xl p-8 text-center text-white">
             <h3 className="text-3xl font-bold mb-4">
               Ready to Stop the Bleeding?
             </h3>
             <p className="text-xl mb-6 text-blue-100">
               Let's talk about automating your processes and putting that money back in your pocket
             </p>
-            <a 
+            <a
               href="https://bayoubiz.systeme.io/c8ac11b7"
               target="_blank"
               rel="noopener noreferrer"
