@@ -80,7 +80,7 @@ export default function AIROICalculator() {
             </div>
             
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              Calculate How Much Money You're Losing Every Month Without AI Automation
+             Test 1 Calculate How Much Money You're Losing Every Month Without AI Automation
             </h1>
             
             <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
