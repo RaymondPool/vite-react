@@ -148,6 +148,8 @@ export default function AIROICalculator() {
                     placeholder="you@company.com"
                     className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
                   />
+                </div>
+                <div className="flex gap-3">
                   <button
                     onClick={handleEmailSubmit}
                     className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
