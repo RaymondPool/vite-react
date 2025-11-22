@@ -140,7 +140,7 @@ export default function AIROICalculator() {
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Enter your email to see your results:
                 </label>
-                <div className="flex gap-3">
+                <div className="flex mb-8 gap-3">
                   <input
                     type="email"
                     value={email}
