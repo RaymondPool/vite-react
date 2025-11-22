@@ -150,7 +150,7 @@ export default function AIROICalculator() {
                   />
                 </div>
                 
-                <div className="flex items-start gap-3">
+                <div>
                   <button
                     onClick={handleEmailSubmit}
                     className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
