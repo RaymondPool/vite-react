@@ -72,8 +72,8 @@ export default function AIROICalculator() {
 
   if (step === 'landing') {
     return (
-      <div style={{minHeight: '100vh', backgroundColor: '#ffffff'}}>
-        <div className="max-w-4xl mx-auto px-6 py-16">
+      <div style={{minHeight: '100vh', backgroundColor: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+       <div className="w-full max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-red-100 rounded-full mb-6">
               <IconAlert />
@@ -174,8 +174,8 @@ export default function AIROICalculator() {
 
   if (step === 'calculator') {
     return (
-      <div style={{minHeight: '100vh', backgroundColor: '#f9fafb'}}>
-        <div className="max-w-2xl mx-auto px-6 py-16">
+      <div style={{minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <div className="w-full max-w-2xl mx-auto px-6 py-16">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4"><IconCalculator /></div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -249,8 +249,8 @@ export default function AIROICalculator() {
 
   if (step === 'results' && results) {
     return (
-     <div style={{minHeight: '100vh', backgroundColor: '#f9fafb'}}> 
-        <div className="max-w-4xl mx-auto px-6 py-16">
+     <div style={{minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+       <div className="w-full max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
               <IconAlert />
