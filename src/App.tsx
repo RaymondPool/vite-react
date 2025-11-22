@@ -75,16 +75,16 @@ export default function AIROICalculator() {
       <div style={{minHeight: '100vh', backgroundColor: '#ffffff'}}>
         <div className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-red-100 rounded-full mb-6">
               <IconAlert />
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-             Calculate How Much Money You're Losing Every Month Without AI Automation
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+               Calculate How Much Money You're Losing Every Month Without AI Automation
             </h1>
-            
-            <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-              60-second calculator shows exactly how much you're losing right now
+             
+            <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+               60-second calculator shows exactly how much you're losing right now
             </p>
           </div>
 
