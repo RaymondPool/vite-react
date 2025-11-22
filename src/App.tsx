@@ -220,7 +220,7 @@ export default function AIROICalculator() {
                   What's the average hourly rate for people doing this work?
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-3 text-gray-700 text-lg font-semibold">$</span>
+                  <span className="absolute left-4 top-3 text-gray-900 text-lg font-semibold">$ </span>
                   <input
                     type="number"
                     step="1"
