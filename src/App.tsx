@@ -80,7 +80,7 @@ export default function AIROICalculator() {
             </div>
             
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-             Test 1 Calculate How Much Money You're Losing Every Month Without AI Automation
+             Calculate How Much Money You're Losing Every Month Without AI Automation
             </h1>
             
             <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
@@ -197,7 +197,7 @@ export default function AIROICalculator() {
                   value={formData.taskName}
                   onChange={(e) => setFormData({...formData, taskName: e.target.value})}
                   placeholder="e.g., Data entry, report generation, email responses"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white text-gray-900"
                 />
               </div>
 
@@ -211,7 +211,7 @@ export default function AIROICalculator() {
                   value={formData.hoursPerWeek}
                   onChange={(e) => setFormData({...formData, hoursPerWeek: e.target.value})}
                   placeholder="10"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white text-gray-900"
                 />
               </div>
 
@@ -227,7 +227,7 @@ export default function AIROICalculator() {
                     value={formData.hourlyRate}
                     onChange={(e) => setFormData({...formData, hourlyRate: e.target.value})}
                     placeholder="50"
-                    className="w-full pl-8 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white text-gray-900"
                   />
                 </div>
                 <p className="text-sm text-gray-500 mt-1">
