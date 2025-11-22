@@ -220,13 +220,12 @@ export default function AIROICalculator() {
                   What's the average hourly rate for people doing this work?
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-3 text-gray-900 text-lg font-semibold">$ </span>
                   <input
                     type="number"
                     step="1"
                     value={formData.hourlyRate}
                     onChange={(e) => setFormData({...formData, hourlyRate: e.target.value})}
-                    placeholder=" 50"
+                    placeholder="50"
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white text-gray-900 placeholder-gray-400"
                   />
                 </div>
