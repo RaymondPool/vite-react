@@ -72,13 +72,10 @@ export default function AIROICalculator() {
 
   if (step === 'landing') {
     return (
-      <div style={{minHeight: '100vh', backgroundColor: '#ffffff'}}>
-       <div className="w-full max-w-4xl mx-auto px-6 pt-8 pb-16">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-red-100 rounded-full mb-6">
-              <IconAlert />
-            </div>
-            
+     <div style={{minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', justifyContent: 'center'}}> 
+        <div className="w-full max-w-2xl mx-auto px-6 py-16">
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4"><IconCalculator /></div> 
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                Calculate How Much Money You're Losing Every Month Without AI Automation
             </h1>
