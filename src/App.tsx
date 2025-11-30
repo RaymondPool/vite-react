@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Analytics } from "@vercel/analytics/next"
 
 // Simple emoji icons
 const IconAlert = () => <span style={{fontSize: '2rem'}}>⚠️</span>;
