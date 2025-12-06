@@ -143,7 +143,7 @@ export default function AIROICalculator() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@company.com"
-                    className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white"
+                    className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white text-grey-900"
                   />
                 </div>
                 
@@ -174,10 +174,10 @@ export default function AIROICalculator() {
 
   if (step === 'calculator') {
     return (
-     <div style={{minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', justifyContent: 'center'}}> 
-        <div className="w-full max-w-2xl mx-auto px-6 py-16">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4"><IconCalculator /></div>
+     <div style={{minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', justifyContent: 'center'}}>
+      <div className="w-full max-w-2xl mx-auto px-6 pt-8 pb-16">
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4"><IconCalculator /></div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Let's Calculate Your Loss
             </h2>
