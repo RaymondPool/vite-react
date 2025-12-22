@@ -81,13 +81,17 @@ export default function AIROICalculator() {
 
   const handleEmailSubmit = () => {
     if (email) {
+      trackEvent('calculator_started', { email: email }); // ADD THIS LINE
       setStep('calculator');
     }
   };
-
   const handleCalculatorSubmit = () => {
-    if (formData.hoursPerWeek && formData.hourlyRate && formData.taskName) {
+    if (formData.hoursPerWeek && formData.hourlyRate) {
       calculateROI();
+      trackEvent('calculation_completed', {  // ADD THESE LINES
+        hours_per_week: formData.hoursPerWeek,
+        hourly_rate: formData.hourlyRate
+      });
     }
   };
 
@@ -339,12 +343,16 @@ export default function AIROICalculator() {
               Let's talk about automating your processes and putting that money back in your pocket
             </p>
             <a
-              href="https://bayoubiz.systeme.io/c8ac11b7"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-8 py-4 bg-white text-blue-600 font-bold text-lg rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
-            >
-              Schedule a Free Strategy Call
+                href="https://bayoubiz.systeme.io/c8ac11b7"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-8 py-4 bg-blue-600..."
+                onClick={() => trackEvent('booking_clicked', { 
+                  email: email,
+                  roi_calculated: results ? 'yes' : 'no'
+                })}  // ADD THIS onClick
+             >
+                Schedule a Free Strategy Call
             </a>
             <p className="text-sm text-blue-100 mt-4">
               No sales pitch. Just a real conversation about what's possible for your business.
