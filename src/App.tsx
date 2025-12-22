@@ -8,6 +8,16 @@ const IconDollar = () => <span style={{fontSize: '2rem'}}>💰</span>;
 const IconTrending = () => <span style={{fontSize: '2rem'}}>📈</span>;
 const IconCheck = () => <span style={{fontSize: '1.5rem'}}>✅</span>;
 
+// Add to calculator: Lead scoring
+const calculateLeadScore = (data) => {
+  let score = 0;
+  if (data.employeeCount > 50) score += 2;
+  if (data.roiAmount > 50000) score += 3;
+  if (data.timeframe === 'immediate') score += 2;
+  return score; // 7+ = hot lead
+}
+
+
 interface Results {
   monthlyLoss: string;
   annualLoss: string;
