@@ -1,4 +1,15 @@
 import { useState } from 'react';
+import { useState } from 'react';
+
+// Add this tracking function here
+const trackEvent = (eventName: string, eventParams = {}) => {
+  if (window.gtag) {
+    window.gtag('event', eventName, eventParams);
+  }
+};
+
+// Simple emoji icons
+const IconAlert = () => <span style=...
 
 // Simple emoji icons
 const IconAlert = () => <span style={{fontSize: '2rem'}}>⚠️</span>;
