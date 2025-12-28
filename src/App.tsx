@@ -376,17 +376,16 @@ export default function AIROICalculator() {
             <p className="text-xl mb-6 text-blue-100">
               Let's talk about automating your processes and putting that money back in your pocket
             </p>
+            
             <a
                 href="https://bayoubiz.systeme.io/c8ac11b7"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-8 py-4 bg-blue-600..."
-                onClick={() => trackEvent('booking_clicked', { 
-                  email: email,
-                  roi_calculated: results ? 'yes' : 'no'
-                })}  // ADD THIS onClick
+                className="inline-block px-8 py-4 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 transition shadow-lg"
+                onClick={() => trackEvent('booking_clicked', {...})}
              >
-                Schedule a Free Strategy Call
+               🎯 Book Your Free Consultation
+               <div className="text-sm font-normal mt-1">Only 3 slots left this week</div>
             </a>
             <p className="text-sm text-blue-100 mt-4">
               No sales pitch. Just a real conversation about what's possible for your business.
