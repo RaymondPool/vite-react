@@ -1,21 +1,34 @@
 import { useState } from 'react';
 
-const trackEvent = (eventName, eventParams = {}) => {
+// Extend Window interface for gtag
+declare global {
+  interface Window {
+    gtag?: (command: string, ...args: any[]) => void;
+  }
+}
+
+interface Results {
+  weeklyLoss: number;
+  monthlyLoss: number;
+  yearlyLoss: number;
+  hoursPerYear: number;
+}
+
+const trackEvent = (eventName: string, eventParams: Record<string, any> = {}) => {
   if (window.gtag) {
     window.gtag('event', eventName, eventParams);
   }
 };
 
 function App() {
-  const [step, setStep] = useState('landing');
+  const [step, setStep] = useState<'landing' | 'calculator' | 'results'>('landing');
   const [email, setEmail] = useState('');
   const [formData, setFormData] = useState({
     taskName: '',
     hoursPerWeek: '',
     hourlyRate: '',
   });
-  const [results, setResults] = useState(null);
-  const [showExitPopup, setShowExitPopup] = useState(false);
+  const [results, setResults] = useState<Results | null>(null);
 
   const handleEmailSubmit = () => {
     if (email) {
@@ -106,12 +119,14 @@ function App() {
                   onClick={handleEmailSubmit}
                   style={{width: '100%', padding: '18px', background: 'linear-gradient(135deg, #40E0D0 0%, #00CED1 100%)', color: '#1a2332', fontSize: '18px', fontWeight: 'bold', border: 'none', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.3s', boxShadow: '0 8px 24px rgba(64, 224, 208, 0.3)'}}
                   onMouseOver={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 12px 32px rgba(64, 224, 208, 0.4)';
+                    const target = e.target as HTMLButtonElement;
+                    target.style.transform = 'translateY(-2px)';
+                    target.style.boxShadow = '0 12px 32px rgba(64, 224, 208, 0.4)';
                   }}
                   onMouseOut={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 8px 24px rgba(64, 224, 208, 0.3)';
+                    const target = e.target as HTMLButtonElement;
+                    target.style.transform = 'translateY(0)';
+                    target.style.boxShadow = '0 8px 24px rgba(64, 224, 208, 0.3)';
                   }}
                 >
                   Calculate My ROI →
@@ -291,8 +306,14 @@ function App() {
                 yearly_loss: results.yearlyLoss
               })}
               style={{display: 'inline-block', padding: '20px 48px', background: 'linear-gradient(135deg, #40E0D0 0%, #00CED1 100%)', color: '#1a2332', fontSize: '20px', fontWeight: 'bold', textDecoration: 'none', borderRadius: '12px', boxShadow: '0 12px 32px rgba(64, 224, 208, 0.4)', transition: 'all 0.3s'}}
-              onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
-              onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+              onMouseOver={(e) => {
+                const target = e.target as HTMLAnchorElement;
+                target.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                const target = e.target as HTMLAnchorElement;
+                target.style.transform = 'translateY(0)';
+              }}
             >
               🎯 Book Your Free Consultation
               <div style={{fontSize: '14px', fontWeight: 'normal', marginTop: '8px', opacity: 0.9}}>
