@@ -368,6 +368,22 @@ export default function AIROICalculator() {
       </div>
     );
   }
+// Add state for exit popup
+const [showExitPopup, setShowExitPopup] = useState(false);
 
+// Add exit-intent detection
+useEffect(() => {
+  const handleMouseLeave = (e: MouseEvent) => {
+    if (e.clientY <= 0 && step === 'calculator' && !results) {
+      setShowExitPopup(true);
+    }
+  };
+  
+  document.addEventListener('mouseleave', handleMouseLeave);
+  return () => document.removeEventListener('mouseleave', handleMouseLeave);
+}, [step, results]);
+
+
+  
   return null;
 }
