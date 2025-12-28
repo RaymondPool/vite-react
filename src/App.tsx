@@ -1,56 +1,28 @@
 import { useState } from 'react';
-import { useState } from 'react';
 
-// Add this tracking function here
-const trackEvent = (eventName: string, eventParams = {}) => {
+const trackEvent = (eventName, eventParams = {}) => {
   if (window.gtag) {
     window.gtag('event', eventName, eventParams);
   }
 };
 
-// Simple emoji icons
-const IconAlert = () => <span style=...
-
-// Simple emoji icons
-const IconAlert = () => <span style={{fontSize: '2rem'}}>⚠️</span>;
-const IconCalculator = () => <span style={{fontSize: '2rem'}}>🧮</span>;
-const IconClock = () => <span style={{fontSize: '2rem'}}>⏰</span>;
-const IconDollar = () => <span style={{fontSize: '2rem'}}>💰</span>;
-const IconTrending = () => <span style={{fontSize: '2rem'}}>📈</span>;
-const IconCheck = () => <span style={{fontSize: '1.5rem'}}>✅</span>;
-
-// Add to calculator: Lead scoring
-const calculateLeadScore = (data) => {
-  let score = 0;
-  if (data.employeeCount > 50) score += 2;
-  if (data.roiAmount > 50000) score += 3;
-  if (data.timeframe === 'immediate') score += 2;
-  return score; // 7+ = hot lead
-}
-
-
-interface Results {
-  monthlyLoss: string;
-  annualLoss: string;
-  timeSavingsPerMonth: string;
-  monthlySavings: string;
-  annualSavings: string;
-  roi: string;
-  paybackMonths: string;
-}
-
-export default function AIROICalculator() {
+function App() {
   const [step, setStep] = useState('landing');
-  const [email, setEmail] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('email') || '';
-  });
+  const [email, setEmail] = useState('');
   const [formData, setFormData] = useState({
+    taskName: '',
     hoursPerWeek: '',
     hourlyRate: '',
-    taskName: ''
   });
-  const [results, setResults] = useState<Results | null>(null);
+  const [results, setResults] = useState(null);
+  const [showExitPopup, setShowExitPopup] = useState(false);
+
+  const handleEmailSubmit = () => {
+    if (email) {
+      trackEvent('calculator_started', { email: email });
+      setStep('calculator');
+    }
+  };
 
   const calculateROI = () => {
     const hours = parseFloat(formData.hoursPerWeek);
@@ -58,162 +30,122 @@ export default function AIROICalculator() {
     
     const weeklyLoss = hours * rate;
     const monthlyLoss = weeklyLoss * 4.33;
-    const annualLoss = monthlyLoss * 12;
-    
-    const automationCost = 2000;
-    const timeSavings = hours * 0.8;
-    const monthlySavings = timeSavings * rate * 4.33;
-    const annualSavings = monthlySavings * 12;
-    const roi = ((annualSavings - automationCost) / automationCost) * 100;
-    const paybackMonths = automationCost / monthlySavings;
+    const yearlyLoss = monthlyLoss * 12;
     
     setResults({
-      monthlyLoss: monthlyLoss.toFixed(0),
-      annualLoss: annualLoss.toFixed(0),
-      timeSavingsPerMonth: (timeSavings * 4.33).toFixed(1),
-      monthlySavings: monthlySavings.toFixed(0),
-      annualSavings: annualSavings.toFixed(0),
-      roi: roi.toFixed(0),
-      paybackMonths: paybackMonths.toFixed(1)
+      weeklyLoss,
+      monthlyLoss,
+      yearlyLoss,
+      hoursPerYear: hours * 52,
     });
+    
     setStep('results');
   };
-  {showExitPopup && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white rounded-lg p-8 max-w-md mx-4">
-      <h3 className="text-2xl font-bold mb-4">Wait! Don't Leave Yet 👋</h3>
-      <p className="text-gray-600 mb-6">
-        You're just 30 seconds away from seeing how much money you could save with AI automation.
-      </p>
-      <div className="flex gap-4">
-        <button
-          onClick={() => setShowExitPopup(false)}
-          className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold"
-        >
-          Finish Calculator
-        </button>
-        <button
-          onClick={() => setShowExitPopup(false)}
-          className="flex-1 px-6 py-3 border border-gray-300 rounded-lg"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-  const handleEmailSubmit = () => {
-    if (email) {
-      trackEvent('calculator_started', { email: email }); // ADD THIS LINE
-      setStep('calculator');
-    }
-  };
+
   const handleCalculatorSubmit = () => {
     if (formData.hoursPerWeek && formData.hourlyRate) {
-      calculateROI();
-      trackEvent('calculation_completed', {  // ADD THESE LINES
+      trackEvent('calculation_completed', {
         hours_per_week: formData.hoursPerWeek,
         hourly_rate: formData.hourlyRate
       });
+      calculateROI();
     }
   };
 
   if (step === 'landing') {
     return (
-     <div style={{minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', justifyContent: 'center'}}> 
-        <div className="w-full max-w-2xl mx-auto px-6 py-16">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4"><IconCalculator /></div> 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-               Calculate How Much Money You're Losing Every Month Without AI Automation
-            </h1>
-             
-            <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-               60-second calculator shows exactly how much you're losing right now
-            </p>
-          </div>
-
-          <div className="bg-gray-50 rounded-2xl shadow-xl p-8 mb-12 max-w-3xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <div className="text-center p-6 bg-white rounded-xl border border-gray-200">
-                <div className="flex justify-center mb-3"><IconClock /></div>
-                <h3 className="font-semibold text-gray-900 mb-2">Wasted Hours</h3>
-                <p className="text-gray-600 text-sm">Your team spends 15-40 hours per week on repetitive tasks that AI could handle</p>
-              </div>
-              
-              <div className="text-center p-6 bg-white rounded-xl border border-gray-200">
-              <div className="flex justify-center mb-3"><IconDollar /></div>
-                <h3 className="font-semibold text-gray-900 mb-2">Hidden Costs</h3>
-                <p className="text-gray-600 text-sm">Manual processes cost 3-5x more than automated ones when you factor in errors and delays</p>
-              </div>
-              
-              <div className="text-center p-6 bg-white rounded-xl border border-gray-200">
-                <div className="flex justify-center mb-3"><IconTrending /></div>
-                <h3 className="font-semibold text-gray-900 mb-2">Missed Growth</h3>
-                <p className="text-gray-600 text-sm">While you're stuck in the weeds, competitors are scaling with automation</p>
-              </div>
+      <div style={{minHeight: '100vh', background: 'linear-gradient(135deg, #1a2332 0%, #2d3e50 100%)'}}>
+        {/* Header */}
+        <div style={{background: 'rgba(26, 35, 50, 0.95)', padding: '20px 0', borderBottom: '3px solid #40E0D0'}}>
+          <div style={{maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', gap: '15px'}}>
+            <div style={{width: '50px', height: '50px', background: '#40E0D0', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+              <div style={{width: '20px', height: '20px', background: '#1a2332', borderRadius: '2px', transform: 'rotate(45deg)'}}></div>
             </div>
+            <div>
+              <h1 style={{margin: 0, fontSize: '28px', fontWeight: 'bold', color: '#fff', letterSpacing: '-0.5px'}}>
+                Bayou Bros
+              </h1>
+              <p style={{margin: 0, fontSize: '14px', color: '#40E0D0'}}>SEO · Website · AI</p>
+            </div>
+          </div>
+        </div>
 
-            <div className="border-t border-gray-200 pt-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-                Here's What You'll Discover:
-              </h2>
-              
-              <div className="space-y-4 mb-8">
-                <div className="flex items-start gap-3">
-                  <span className="flex-shrink-0 mt-1"><IconCheck /></span>
-                  <p className="text-gray-700">Exactly how much money you're hemorrhaging each month on manual processes that could be automated</p>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <span className="flex-shrink-0 mt-1"><IconCheck /></span>
-                  <p className="text-gray-700">How many hours your team could reclaim for high-value work instead of mind-numbing repetition</p>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <span className="flex-shrink-0 mt-1"><IconCheck /></span>
-                  <p className="text-gray-700">Your potential ROI and payback period so you can make a data-driven decision</p>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <span className="flex-shrink-0 mt-1"><IconCheck /></span>
-                  <p className="text-gray-700">A personalized breakdown you can show your team or stakeholders to justify the investment</p>
-                </div>
-              </div>
+        {/* Hero Section */}
+        <div style={{maxWidth: '1100px', margin: '0 auto', padding: '80px 20px 60px'}}>
+          <div style={{textAlign: 'center', marginBottom: '60px'}}>
+            <div style={{display: 'inline-block', background: 'rgba(64, 224, 208, 0.1)', border: '1px solid #40E0D0', borderRadius: '30px', padding: '8px 20px', marginBottom: '30px'}}>
+              <span style={{color: '#40E0D0', fontSize: '14px', fontWeight: '600'}}>🎯 FREE ROI CALCULATOR</span>
+            </div>
+            
+            <h1 style={{fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 'bold', color: '#fff', marginBottom: '24px', lineHeight: '1.2'}}>
+              Calculate How Much Money<br/>
+              <span style={{color: '#40E0D0'}}>You're Losing Every Month</span><br/>
+              Without AI Automation
+            </h1>
+            
+            <p style={{fontSize: '20px', color: '#a8b8d0', maxWidth: '700px', margin: '0 auto 40px', lineHeight: '1.6'}}>
+              60-second calculator shows exactly how much you're losing right now on manual tasks
+            </p>
 
-              <div className="max-w-md mx-auto">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Enter your email to see your results:
-                </label>
-                <div className="flex mb-8 gap-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@company.com"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white text-gray-900"
-                  />
-                </div>
-                
-                <div>
-                  <button
-                    onClick={handleEmailSubmit}
-                    className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
-                  >
-                    Start
-                  </button>
-                </div>
-                <p className="text-sm text-gray-500 mt-3 text-center">
+            {/* Email Capture */}
+            <div style={{maxWidth: '500px', margin: '0 auto'}}>
+              <div style={{background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', borderRadius: '16px', padding: '40px', border: '1px solid rgba(64, 224, 208, 0.2)', boxShadow: '0 20px 60px rgba(0,0,0,0.3)'}}>
+                <h3 style={{color: '#fff', fontSize: '20px', marginBottom: '20px', fontWeight: '600'}}>
+                  Enter your email to see the results
+                </h3>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@company.com"
+                  style={{width: '100%', padding: '16px', fontSize: '16px', border: '2px solid rgba(64, 224, 208, 0.3)', borderRadius: '12px', marginBottom: '16px', background: 'rgba(255,255,255,0.05)', color: '#fff', outline: 'none', transition: 'all 0.3s'}}
+                  onFocus={(e) => e.target.style.borderColor = '#40E0D0'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(64, 224, 208, 0.3)'}
+                />
+                <button
+                  onClick={handleEmailSubmit}
+                  style={{width: '100%', padding: '18px', background: 'linear-gradient(135deg, #40E0D0 0%, #00CED1 100%)', color: '#1a2332', fontSize: '18px', fontWeight: 'bold', border: 'none', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.3s', boxShadow: '0 8px 24px rgba(64, 224, 208, 0.3)'}}
+                  onMouseOver={(e) => {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 12px 32px rgba(64, 224, 208, 0.4)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 8px 24px rgba(64, 224, 208, 0.3)';
+                  }}
+                >
+                  Calculate My ROI →
+                </button>
+                <p style={{color: '#a8b8d0', fontSize: '13px', marginTop: '16px', marginBottom: 0}}>
                   No spam. Just your personalized ROI calculation.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="text-center text-gray-600">
-            <p className="text-sm">
-              🔒 Your information is secure. We respect your privacy and will never share your data.
-            </p>
+          {/* Features Grid */}
+          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginTop: '80px'}}>
+            {[
+              {icon: '⏱️', title: 'See Your Time Loss', desc: 'Find out exactly how many hours you\'re wasting monthly'},
+              {icon: '💰', title: 'Calculate Real Costs', desc: 'Get the dollar amount your manual processes are costing'},
+              {icon: '📈', title: 'Get Your ROI Plan', desc: 'See your payback period and automation roadmap'}
+            ].map((feature, i) => (
+              <div key={i} style={{background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(64, 224, 208, 0.15)', borderRadius: '16px', padding: '32px', textAlign: 'center', transition: 'all 0.3s'}}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.borderColor = '#40E0D0';
+                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(64, 224, 208, 0.2)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'rgba(64, 224, 208, 0.15)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+                <div style={{fontSize: '48px', marginBottom: '16px'}}>{feature.icon}</div>
+                <h3 style={{color: '#fff', fontSize: '20px', fontWeight: '600', marginBottom: '12px'}}>{feature.title}</h3>
+                <p style={{color: '#a8b8d0', fontSize: '15px', lineHeight: '1.6', margin: 0}}>{feature.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -222,84 +154,76 @@ export default function AIROICalculator() {
 
   if (step === 'calculator') {
     return (
-     <div style={{minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', justifyContent: 'center'}}>
-       <div className="w-full max-w-2xl mx-auto px-6 pt-8 pb-16">
-        {step === 'calculator' && (
-          <div className="w-full max-w-2xl mx-auto mb-8">
-             <div className="flex justify-between mb-2">
-               <span className="text-sm text-blue-600 font-semibold">Step 2 of 3</span>
-               <span className="text-sm text-gray-500">Almost there!</span>
-             </div>
-             <div className="w-full bg-gray-200 rounded-full h-2">
-               <div className="bg-blue-600 h-2 rounded-full" style={{width: '66%'}}></div>
-             </div>
+      <div style={{minHeight: '100vh', background: 'linear-gradient(135deg, #1a2332 0%, #2d3e50 100%)'}}>
+        <div style={{maxWidth: '700px', margin: '0 auto', padding: '40px 20px'}}>
+          
+          {/* Progress Bar */}
+          <div style={{marginBottom: '40px'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '8px'}}>
+              <span style={{fontSize: '14px', color: '#40E0D0', fontWeight: '600'}}>Step 2 of 3</span>
+              <span style={{fontSize: '14px', color: '#a8b8d0'}}>Almost there!</span>
+            </div>
+            <div style={{width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px', overflow: 'hidden'}}>
+              <div style={{width: '66%', height: '100%', background: 'linear-gradient(90deg, #40E0D0, #00CED1)', borderRadius: '10px'}}></div>
+            </div>
           </div>
-         )}
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4"><IconCalculator /></div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+
+          <div style={{background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', borderRadius: '20px', padding: '48px', border: '1px solid rgba(64, 224, 208, 0.2)'}}>
+            <h2 style={{fontSize: '32px', fontWeight: 'bold', color: '#fff', marginBottom: '12px', textAlign: 'center'}}>
               Let's Calculate Your Loss
             </h2>
-            <p className="text-gray-600">
-              Answer 3 quick questions about one repetitive task
+            <p style={{color: '#a8b8d0', textAlign: 'center', marginBottom: '40px'}}>
+              Answer 3 quick questions about your manual work
             </p>
-          </div>
 
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  What's one manual task your team does repeatedly?
-                </label>
-                <input
-                  type="text"
-                  value={formData.taskName}
-                  onChange={(e) => setFormData({...formData, taskName: e.target.value})}
-                  placeholder="e.g., Data entry, report generation, email responses"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white text-gray-900"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  How many hours per week does your team spend on this?
-                </label>
-                <input
-                  type="number"
-                  step="0.5"
-                  value={formData.hoursPerWeek}
-                  onChange={(e) => setFormData({...formData, hoursPerWeek: e.target.value})}
-                  placeholder="10"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white text-gray-900"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  What's the average hourly rate for people doing this work?
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    step="1"
-                    value={formData.hourlyRate}
-                    onChange={(e) => setFormData({...formData, hourlyRate: e.target.value})}
-                    placeholder="50"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none bg-white text-gray-900 placeholder-gray-400"
-                  />
-                </div>
-                <p className="text-sm text-gray-500 mt-1">
-                  Include salary, benefits, and overhead costs
-                </p>
-              </div>
-
-              <button
-                onClick={handleCalculatorSubmit}
-                className="w-full py-4 bg-blue-600 text-white font-bold text-lg rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
-              >
-                Show Me What I'm Losing
-              </button>
+            <div style={{marginBottom: '28px'}}>
+              <label style={{display: 'block', color: '#fff', fontWeight: '600', marginBottom: '12px', fontSize: '15px'}}>
+                What's one manual task your team does repeatedly?
+              </label>
+              <input
+                type="text"
+                value={formData.taskName}
+                onChange={(e) => setFormData({...formData, taskName: e.target.value})}
+                placeholder="e.g., Data entry, report generation..."
+                style={{width: '100%', padding: '16px', fontSize: '16px', border: '2px solid rgba(64, 224, 208, 0.3)', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', color: '#fff', outline: 'none'}}
+              />
             </div>
+
+            <div style={{marginBottom: '28px'}}>
+              <label style={{display: 'block', color: '#fff', fontWeight: '600', marginBottom: '12px', fontSize: '15px'}}>
+                How many hours per week does this take?
+              </label>
+              <input
+                type="number"
+                value={formData.hoursPerWeek}
+                onChange={(e) => setFormData({...formData, hoursPerWeek: e.target.value})}
+                placeholder="e.g., 10"
+                style={{width: '100%', padding: '16px', fontSize: '16px', border: '2px solid rgba(64, 224, 208, 0.3)', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', color: '#fff', outline: 'none'}}
+              />
+            </div>
+
+            <div style={{marginBottom: '32px'}}>
+              <label style={{display: 'block', color: '#fff', fontWeight: '600', marginBottom: '12px', fontSize: '15px'}}>
+                What's the average hourly rate for this work?
+              </label>
+              <input
+                type="number"
+                value={formData.hourlyRate}
+                onChange={(e) => setFormData({...formData, hourlyRate: e.target.value})}
+                placeholder="e.g., 50"
+                style={{width: '100%', padding: '16px', fontSize: '16px', border: '2px solid rgba(64, 224, 208, 0.3)', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', color: '#fff', outline: 'none'}}
+              />
+              <p style={{color: '#a8b8d0', fontSize: '13px', marginTop: '8px'}}>
+                Include salary, benefits, and overhead costs
+              </p>
+            </div>
+
+            <button
+              onClick={handleCalculatorSubmit}
+              style={{width: '100%', padding: '18px', background: 'linear-gradient(135deg, #40E0D0 0%, #00CED1 100%)', color: '#1a2332', fontSize: '18px', fontWeight: 'bold', border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 8px 24px rgba(64, 224, 208, 0.3)'}}
+            >
+              Show Me What I'm Losing
+            </button>
           </div>
         </div>
       </div>
@@ -308,115 +232,97 @@ export default function AIROICalculator() {
 
   if (step === 'results' && results) {
     return (
-     <div style={{minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', justifyContent: 'center'}}>
-       <div className="w-full max-w-4xl mx-auto px-6 py-16">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-              <IconAlert />
-            </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-2">
-              Your Wake-Up Call
-            </h2>
-            <p className="text-xl text-gray-600">
-              Here's what "{formData.taskName}" is really costing you
+      <div style={{minHeight: '100vh', background: 'linear-gradient(135deg, #1a2332 0%, #2d3e50 100%)'}}>
+        <div style={{maxWidth: '900px', margin: '0 auto', padding: '60px 20px'}}>
+          
+          <div style={{textAlign: 'center', marginBottom: '48px'}}>
+            <div style={{fontSize: '64px', marginBottom: '16px'}}>😱</div>
+            <h1 style={{fontSize: '42px', fontWeight: 'bold', color: '#fff', marginBottom: '16px'}}>
+              Here's What You're Losing
+            </h1>
+            <p style={{fontSize: '18px', color: '#a8b8d0'}}>
+              On <strong style={{color: '#40E0D0'}}>{formData.taskName}</strong> alone
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Money Lost Per Month</h3>
-              <p className="text-4xl font-bold text-red-600">${Number(results.monthlyLoss).toLocaleString()}</p>
-              <p className="text-gray-600 mt-2">That's ${Number(results.annualLoss).toLocaleString()} per year going down the drain</p>
+          {/* Results Cards */}
+          <div style={{display: 'grid', gap: '20px', marginBottom: '48px'}}>
+            <div style={{background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', border: '2px solid #40E0D0', borderRadius: '16px', padding: '32px', textAlign: 'center'}}>
+              <div style={{color: '#a8b8d0', fontSize: '14px', fontWeight: '600', marginBottom: '8px'}}>ANNUAL COST</div>
+              <div style={{fontSize: '56px', fontWeight: 'bold', color: '#40E0D0', marginBottom: '8px'}}>
+                ${results.yearlyLoss.toLocaleString()}
+              </div>
+              <div style={{color: '#fff', fontSize: '16px'}}>
+                That's {results.hoursPerYear} hours per year wasted
+              </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Hours Wasted Per Month</h3>
-              <p className="text-4xl font-bold text-orange-600">{results.timeSavingsPerMonth}</p>
-              <p className="text-gray-600 mt-2">Time your team could spend on strategic work instead</p>
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px'}}>
+              <div style={{background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(64, 224, 208, 0.2)', borderRadius: '16px', padding: '24px', textAlign: 'center'}}>
+                <div style={{color: '#a8b8d0', fontSize: '13px', marginBottom: '8px'}}>MONTHLY</div>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#fff'}}>
+                  ${results.monthlyLoss.toLocaleString()}
+                </div>
+              </div>
+              <div style={{background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(10px)', border: '1px solid rgba(64, 224, 208, 0.2)', borderRadius: '16px', padding: '24px', textAlign: 'center'}}>
+                <div style={{color: '#a8b8d0', fontSize: '13px', marginBottom: '8px'}}>WEEKLY</div>
+                <div style={{fontSize: '32px', fontWeight: 'bold', color: '#fff'}}>
+                  ${results.weeklyLoss.toLocaleString()}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-xl p-8 mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              What AI Automation Could Do For You
-            </h3>
-
-            <div className="grid md:grid-cols-3 gap-6 mb-6">
-              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                <p className="text-sm font-semibold text-gray-600 mb-1">Monthly Savings</p>
-                <p className="text-3xl font-bold text-green-600">${Number(results.monthlySavings).toLocaleString()}</p>
-              </div>
-
-              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                <p className="text-sm font-semibold text-gray-600 mb-1">Annual ROI</p>
-                <p className="text-3xl font-bold text-green-600">{results.roi}%</p>
-              </div>
-
-              <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                <p className="text-sm font-semibold text-gray-600 mb-1">Payback Period</p>
-                <p className="text-3xl font-bold text-green-600">{results.paybackMonths} mo</p>
-              </div>
-            </div>
-
-            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
-              <h4 className="font-bold text-gray-900 mb-3">Bottom Line:</h4>
-              <p className="text-gray-700 mb-4">
-                By continuing to do "{formData.taskName}" manually, you're losing ${Number(results.monthlyLoss).toLocaleString()} every single month. That's money that could be reinvested in growth, innovation, or your bottom line.
-              </p>
-              <p className="text-gray-700 font-semibold">
-                With AI automation, you'd break even in {results.paybackMonths} months and save ${Number(results.annualSavings).toLocaleString()} annually after that.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-blue-600 rounded-xl shadow-2xl p-8 text-center text-white">
-            <h3 className="text-3xl font-bold mb-4">
+          {/* CTA Section */}
+          <div style={{background: 'linear-gradient(135deg, rgba(64, 224, 208, 0.1), rgba(0, 206, 209, 0.1))', backdropFilter: 'blur(10px)', border: '2px solid #40E0D0', borderRadius: '20px', padding: '48px', textAlign: 'center'}}>
+            <h3 style={{fontSize: '28px', fontWeight: 'bold', color: '#fff', marginBottom: '16px'}}>
               Ready to Stop the Bleeding?
             </h3>
-            <p className="text-xl mb-6 text-blue-100">
+            <p style={{fontSize: '18px', color: '#a8b8d0', marginBottom: '32px', maxWidth: '600px', margin: '0 auto 32px'}}>
               Let's talk about automating your processes and putting that money back in your pocket
             </p>
-            
             <a
-                href="https://bayoubiz.systeme.io/c8ac11b7"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-8 py-4 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 transition shadow-lg"
-                onClick={() => trackEvent('booking_clicked', {...})}
-             >
-               🎯 Book Your Free Consultation
-               <div className="text-sm font-normal mt-1">Only 3 slots left this week</div>
+              href="https://bayoubiz.systeme.io/c8ac11b7"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('booking_clicked', { 
+                email: email,
+                roi_calculated: 'yes',
+                yearly_loss: results.yearlyLoss
+              })}
+              style={{display: 'inline-block', padding: '20px 48px', background: 'linear-gradient(135deg, #40E0D0 0%, #00CED1 100%)', color: '#1a2332', fontSize: '20px', fontWeight: 'bold', textDecoration: 'none', borderRadius: '12px', boxShadow: '0 12px 32px rgba(64, 224, 208, 0.4)', transition: 'all 0.3s'}}
+              onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+              onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            >
+              🎯 Book Your Free Consultation
+              <div style={{fontSize: '14px', fontWeight: 'normal', marginTop: '8px', opacity: 0.9}}>
+                Only 3 slots left this week
+              </div>
             </a>
-            <p className="text-sm text-blue-100 mt-4">
-              No sales pitch. Just a real conversation about what's possible for your business.
+            <p style={{color: '#a8b8d0', fontSize: '14px', marginTop: '24px'}}>
+              No sales pitch. Just a real conversation about your automation options.
             </p>
           </div>
 
-          <div className="text-center mt-8 text-gray-600">
-            <p className="text-sm">
-              A copy of your results has been sent to {email}
+          {/* Email Confirmation */}
+          <div style={{textAlign: 'center', marginTop: '32px', padding: '24px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px', border: '1px solid rgba(64, 224, 208, 0.1)'}}>
+            <p style={{color: '#a8b8d0', fontSize: '14px', margin: 0}}>
+              📧 A copy of your results has been sent to <strong style={{color: '#40E0D0'}}>{email}</strong>
             </p>
           </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{background: 'rgba(26, 35, 50, 0.95)', padding: '32px 20px', borderTop: '1px solid rgba(64, 224, 208, 0.2)', textAlign: 'center'}}>
+          <p style={{color: '#a8b8d0', fontSize: '14px', margin: 0}}>
+            Built with 💙 by <strong style={{color: '#40E0D0'}}>Bayou Bros</strong>
+          </p>
         </div>
       </div>
     );
   }
-// Add state for exit popup
-const [showExitPopup, setShowExitPopup] = useState(false);
 
-// Add exit-intent detection
-useEffect(() => {
-  const handleMouseLeave = (e: MouseEvent) => {
-    if (e.clientY <= 0 && step === 'calculator' && !results) {
-      setShowExitPopup(true);
-    }
-  };
-  
-  document.addEventListener('mouseleave', handleMouseLeave);
-  return () => document.removeEventListener('mouseleave', handleMouseLeave);
-}, [step, results]);
-
-
-  
   return null;
 }
+
+export default App;
