@@ -223,7 +223,18 @@ export default function AIROICalculator() {
   if (step === 'calculator') {
     return (
      <div style={{minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', justifyContent: 'center'}}>
-      <div className="w-full max-w-2xl mx-auto px-6 pt-8 pb-16">
+       <div className="w-full max-w-2xl mx-auto px-6 pt-8 pb-16">
+        {step === 'calculator' && (
+          <div className="w-full max-w-2xl mx-auto mb-8">
+             <div className="flex justify-between mb-2">
+               <span className="text-sm text-blue-600 font-semibold">Step 2 of 3</span>
+               <span className="text-sm text-gray-500">Almost there!</span>
+             </div>
+             <div className="w-full bg-gray-200 rounded-full h-2">
+               <div className="bg-blue-600 h-2 rounded-full" style={{width: '66%'}}></div>
+             </div>
+          </div>
+         )}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4"><IconCalculator /></div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
