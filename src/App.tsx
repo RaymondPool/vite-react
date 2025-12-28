@@ -78,7 +78,30 @@ export default function AIROICalculator() {
     });
     setStep('results');
   };
-
+  {showExitPopup && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-8 max-w-md mx-4">
+      <h3 className="text-2xl font-bold mb-4">Wait! Don't Leave Yet 👋</h3>
+      <p className="text-gray-600 mb-6">
+        You're just 30 seconds away from seeing how much money you could save with AI automation.
+      </p>
+      <div className="flex gap-4">
+        <button
+          onClick={() => setShowExitPopup(false)}
+          className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold"
+        >
+          Finish Calculator
+        </button>
+        <button
+          onClick={() => setShowExitPopup(false)}
+          className="flex-1 px-6 py-3 border border-gray-300 rounded-lg"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
   const handleEmailSubmit = () => {
     if (email) {
       trackEvent('calculator_started', { email: email }); // ADD THIS LINE
