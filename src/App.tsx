@@ -30,9 +30,28 @@ function App() {
   });
   const [results, setResults] = useState<Results | null>(null);
 
-  const handleEmailSubmit = () => {
+  const handleEmailSubmit = async () => {
     if (email) {
       trackEvent('calculator_started', { email: email });
+      
+      // Send to Zapier webhook
+      try {
+        await fetch('https://hooks.zapier.com/hooks/catch/25610369/uw584gv/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            timestamp: new Date().toISOString(),
+            source: 'ai_roi_calculator',
+            step: 'email_capture'
+          })
+        });
+      } catch (error) {
+        console.log('Webhook error:', error);
+      }
+      
       setStep('calculator');
     }
   };
@@ -55,13 +74,40 @@ function App() {
     setStep('results');
   };
 
-  const handleCalculatorSubmit = () => {
+  const handleCalculatorSubmit = async () => {
     if (formData.hoursPerWeek && formData.hourlyRate) {
       trackEvent('calculation_completed', {
         hours_per_week: formData.hoursPerWeek,
         hourly_rate: formData.hourlyRate
       });
+      
       calculateROI();
+      
+      // Send completed calculation to Zapier
+      const hours = parseFloat(formData.hoursPerWeek);
+      const rate = parseFloat(formData.hourlyRate);
+      const yearlyLoss = hours * rate * 4.33 * 12;
+      
+      try {
+        await fetch('https://hooks.zapier.com/hooks/catch/25610369/uw584gv/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            task_name: formData.taskName,
+            hours_per_week: formData.hoursPerWeek,
+            hourly_rate: formData.hourlyRate,
+            yearly_loss: yearlyLoss,
+            timestamp: new Date().toISOString(),
+            source: 'ai_roi_calculator',
+            step: 'calculation_completed'
+          })
+        });
+      } catch (error) {
+        console.log('Webhook error:', error);
+      }
     }
   };
 
