@@ -34,22 +34,20 @@ function App() {
     if (email) {
       trackEvent('calculator_started', { email: email });
       
-      // Send to Zapier webhook
+      // Send to Google Forms
+      const formData = new FormData();
+      formData.append('entry.56006190', email);
+      formData.append('entry.340418493', new Date().toISOString());
+      formData.append('entry.586988015', 'email_capture');
+      
       try {
-        await fetch('https://hooks.zapier.com/hooks/catch/25610369/uw584gv/', {
+        await fetch('https://docs.google.com/forms/d/e/1XDeCzMybaFE0w1MJC5mFlbKGDU49xa3mh4IAB_2Vfc/formResponse', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            timestamp: new Date().toISOString(),
-            source: 'ai_roi_calculator',
-            step: 'email_capture'
-          })
+          mode: 'no-cors',
+          body: formData
         });
       } catch (error) {
-        console.log('Webhook error:', error);
+        console.log('Form submission error:', error);
       }
       
       setStep('calculator');
@@ -83,30 +81,28 @@ function App() {
       
       calculateROI();
       
-      // Send completed calculation to Zapier
+      // Send completed calculation to Google Forms
       const hours = parseFloat(formData.hoursPerWeek);
       const rate = parseFloat(formData.hourlyRate);
       const yearlyLoss = hours * rate * 4.33 * 12;
       
+      const googleFormData = new FormData();
+      googleFormData.append('entry.56006190', email);
+      googleFormData.append('entry.1413275017', formData.taskName);
+      googleFormData.append('entry.163271857', formData.hoursPerWeek);
+      googleFormData.append('entry.703334186', formData.hourlyRate);
+      googleFormData.append('entry.97022571', yearlyLoss.toFixed(2));
+      googleFormData.append('entry.340418493', new Date().toISOString());
+      googleFormData.append('entry.586988015', 'calculation_completed');
+      
       try {
-        await fetch('https://hooks.zapier.com/hooks/catch/25610369/uw584gv/', {
+        await fetch('https://docs.google.com/forms/d/e/1XDeCzMybaFE0w1MJC5mFlbKGDU49xa3mh4IAB_2Vfc/formResponse', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            task_name: formData.taskName,
-            hours_per_week: formData.hoursPerWeek,
-            hourly_rate: formData.hourlyRate,
-            yearly_loss: yearlyLoss,
-            timestamp: new Date().toISOString(),
-            source: 'ai_roi_calculator',
-            step: 'calculation_completed'
-          })
+          mode: 'no-cors',
+          body: googleFormData
         });
       } catch (error) {
-        console.log('Webhook error:', error);
+        console.log('Form submission error:', error);
       }
     }
   };
