@@ -41,7 +41,7 @@ function App() {
       formData.append('entry.586988015', 'email_capture');
       
       try {
-        await fetch('https://docs.google.com/forms/d/e/1XDeCzMybaFE0w1MJC5mFlbKGDU49xa3mh4IAB_2Vfc/formResponse', {
+        await fetch('https://docs.google.com/forms/d/e/1FAIpQLSe5y1_k4Rf8Ezu9YwN40gsocPNGRIBH4KVQNnkK6b2Ny2ztJZA/formResponse', {
           method: 'POST',
           mode: 'no-cors',
           body: formData
@@ -96,7 +96,7 @@ function App() {
       googleFormData.append('entry.586988015', 'calculation_completed');
       
       try {
-        await fetch('https://docs.google.com/forms/d/e/1XDeCzMybaFE0w1MJC5mFlbKGDU49xa3mh4IAB_2Vfc/formResponse', {
+        await fetch('https://docs.google.com/forms/d/e/1FAIpQLSdyI_K4RT0thZu9YWR4psocMxGiHR4MOQ9WWLkGbZmys2tjzA/formResponse', {
           method: 'POST',
           mode: 'no-cors',
           body: googleFormData
