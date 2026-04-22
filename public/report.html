@@ -650,19 +650,59 @@
 </footer>
 
 <script>
-  // Intersection observer for scroll-triggered card animations
+  // Read URL params and inject real numbers
+  const params = new URLSearchParams(window.location.search);
+  const task    = params.get('task')    || null;
+  const monthly = params.get('monthly') || null;
+  const yearly  = params.get('yearly')  || null;
+  const hours   = params.get('hours')   || null;
+  const weekly  = params.get('weekly')  || null;
+
+  function fmt(n) {
+    return '$' + parseInt(n).toLocaleString();
+  }
+
+  if (monthly && yearly && hours) {
+    // Replace hero stats
+    document.querySelectorAll('.stat-num')[0].textContent = fmt(monthly);
+    document.querySelectorAll('.stat-label')[0].innerHTML = 'your firm loses<br/>every month';
+    document.querySelectorAll('.stat-num')[1].textContent = fmt(yearly);
+    document.querySelectorAll('.stat-label')[1].innerHTML = 'lost every<br/>year';
+    document.querySelectorAll('.stat-num')[2].textContent = hours;
+    document.querySelectorAll('.stat-label')[2].innerHTML = 'hours wasted<br/>per year';
+
+    // Replace hero headline
+    document.querySelector('h1').innerHTML =
+      `Your Firm Is Losing <em>${fmt(monthly)}/mo</em><br/>To Manual Work`;
+
+    // Replace hero subtext
+    document.querySelector('.hero-sub').textContent =
+      `Based on your numbers — ${fmt(yearly)} per year. Here's exactly where it's going and how AI fixes it.`;
+
+    // Inject into CTA section
+    document.querySelector('.cta-sub').innerHTML =
+      `You're losing <strong style="color:var(--teal)">${fmt(monthly)} every month</strong>. A 60-minute audit will show you exactly how to get it back.`;
+  }
+
+  if (task) {
+    // Add task context to intro
+    const introParas = document.querySelectorAll('.intro-text');
+    if (introParas[0]) {
+      introParas[0].innerHTML =
+        `You told us your team spends significant time on <strong>${task}</strong>. That's just one workflow. Most accounting firms have five or more just like it — and they're all automatable.`;
+    }
+  }
+
+  // Existing scroll animation
   const cards = document.querySelectorAll('.workflow-card');
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, 80);
+        entry.target.classList.add('visible');
         observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.1 });
-
   cards.forEach(card => observer.observe(card));
 </script>
 </body>
