@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Your AI Automation Opportunity Report | Bayou Bros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy:     #0D1B2A;
+    --navy2:    #142233;
+    --navy3:    #1C2E42;
+    --teal:     #00C2C7;
+    --teal-dim: #009EA3;
+    --teal-bg:  #E6F9FA;
+    --red-bg:   #FEF2F2;
+    --red:      #DC2626;
+    --white:    #FFFFFF;
+    --off:      #F5F8FA;
+    --muted:    #6B7C8D;
+    --dark:     #1E2D3D;
+    --border:   #DDE6EA;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 24px 60px;
+    overflow: hidden;
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .orb-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,194,199,0.15) 0%, transparent 70%);
+    top: -200px; right: -200px;
+  }
+  .orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,194,199,0.08) 0%, transparent 70%);
+    bottom: -100px; left: -100px;
+  }
+
+  .hero-inner {
+    position: relative; z-index: 1;
+    max-width: 860px; margin: 0 auto; width: 100%;
+  }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s;
+  }
+  .eyebrow-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal); animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
+  }
+  h1 em {
+    font-style: italic; color: var(--teal);
+  }
+
+  .hero-sub {
+    font-size: clamp(15px, 2vw, 18px);
+    font-weight: 300; line-height: 1.6;
+    color: rgba(255,255,255,0.65);
+    max-width: 580px; margin-bottom: 40px;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.3s;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex; gap: 0;
+    border: 1px solid rgba(0,194,199,0.2);
+    border-radius: 12px; overflow: hidden;
+    margin-bottom: 48px;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.4s;
+  }
+  .stat {
+    flex: 1; padding: 20px 16px;
+    text-align: center;
+    background: rgba(255,255,255,0.03);
+    border-right: 1px solid rgba(0,194,199,0.15);
+    transition: background 0.3s;
+  }
+  .stat:last-child { border-right: none; }
+  .stat:hover { background: rgba(0,194,199,0.06); }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(22px, 4vw, 36px);
+    color: var(--teal); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 11px; font-weight: 500;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.04em; line-height: 1.4;
+  }
+
+  /* scroll cue */
+  .scroll-cue {
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 8px; opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.6s;
+  }
+  .scroll-cue span {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.35); text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 40px; height: 2px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%, 100% { width: 40px; }
+    50% { width: 80px; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION WRAPPER ── */
+  section {
+    position: relative; z-index: 1;
+    max-width: 860px; margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 4vw, 40px);
+    line-height: 1.15; color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .intro-text {
+    font-size: 16px; line-height: 1.7;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+  }
+  .intro-text strong { color: rgba(255,255,255,0.9); }
+
+  /* ── WORKFLOW CARDS ── */
+  .workflows { display: flex; flex-direction: column; gap: 32px; }
+
+  .workflow-card {
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+    transition: border-color 0.3s, transform 0.3s;
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s;
+  }
+  .workflow-card.visible {
+    opacity: 1; transform: translateY(0);
+  }
+  .workflow-card:hover {
+    border-color: rgba(0,194,199,0.3);
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    display: flex; align-items: center; gap: 20px;
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .card-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px; line-height: 1;
+    color: rgba(0,194,199,0.15);
+    min-width: 64px; text-align: center;
+    flex-shrink: 0;
+  }
+
+  .card-meta { flex: 1; }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(18px, 3vw, 24px);
+    color: var(--white); margin-bottom: 10px;
+  }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .tag-time { background: rgba(0,194,199,0.15); color: var(--teal); }
+  .tag-high { background: rgba(0,194,199,0.2); color: var(--teal); }
+  .tag-med  { background: rgba(107,124,141,0.2); color: #9AAAB8; }
+
+  .card-body { padding: 20px 28px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  .problem-box, .fix-box {
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .problem-box {
+    background: rgba(220,38,38,0.06);
+    border-left: 3px solid rgba(220,38,38,0.4);
+  }
+  .fix-box {
+    background: rgba(0,194,199,0.06);
+    border-left: 3px solid var(--teal);
+  }
+
+  .box-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .problem-box .box-label { color: #F87171; }
+  .fix-box .box-label { color: var(--teal); }
+
+  .box-text {
+    font-size: 14px; line-height: 1.65;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .tools-line {
+    font-size: 12px; color: rgba(255,255,255,0.35);
+    padding-top: 4px;
+  }
+  .tools-line strong { color: rgba(255,255,255,0.5); }
+
+  /* ── DIVIDER ── */
+  .teal-divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    margin: 0 0 60px;
+    opacity: 0.3;
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    position: relative; z-index: 1;
+    padding: 0 24px 100px;
+  }
+
+  .cta-inner {
+    max-width: 860px; margin: 0 auto;
+    background: linear-gradient(135deg, rgba(0,194,199,0.12) 0%, rgba(13,27,42,0.8) 100%);
+    border: 1px solid rgba(0,194,199,0.25);
+    border-radius: 20px; padding: 60px 48px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-inner::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,194,199,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cta-inner h2 {
+    margin-bottom: 12px;
+  }
+
+  .cta-sub {
+    font-size: 16px; line-height: 1.6;
+    color: rgba(255,255,255,0.55);
+    max-width: 480px; margin: 0 auto 36px;
+  }
+
+  .checklist {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px; text-align: left;
+    margin-bottom: 40px;
+  }
+
+  .check-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; line-height: 1.5;
+    color: rgba(255,255,255,0.7);
+  }
+  .check-icon {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(0,194,199,0.2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+    font-size: 10px; color: var(--teal);
+  }
+
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--teal); color: var(--navy);
+    font-size: 15px; font-weight: 700;
+    padding: 16px 36px; border-radius: 8px;
+    text-decoration: none; letter-spacing: 0.02em;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px rgba(0,194,199,0.3);
+  }
+  .cta-btn:hover {
+    background: #00D8DE;
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(0,194,199,0.5);
+  }
+  .cta-btn svg { width: 16px; height: 16px; }
+
+  .no-pressure {
+    margin-top: 16px; font-size: 12px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ── PDF DOWNLOAD BANNER ── */
+  .pdf-banner {
+    position: relative; z-index: 1;
+    max-width: 860px; margin: 0 auto 60px;
+    padding: 0 24px;
+  }
+  .pdf-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; flex-wrap: wrap;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 20px 24px;
+  }
+  .pdf-left { display: flex; align-items: center; gap: 14px; }
+  .pdf-icon {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: rgba(0,194,199,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .pdf-text { font-size: 14px; color: rgba(255,255,255,0.6); }
+  .pdf-text strong { color: var(--white); display: block; font-size: 15px; margin-bottom: 2px; }
+  .pdf-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; border: 1px solid rgba(0,194,199,0.4);
+    color: var(--teal); font-size: 13px; font-weight: 600;
+    padding: 10px 20px; border-radius: 7px; text-decoration: none;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .pdf-btn:hover { background: rgba(0,194,199,0.1); border-color: var(--teal); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 24px;
+    font-size: 12px; color: rgba(255,255,255,0.2);
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .stats-bar { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 1px solid rgba(0,194,199,0.15); }
+    .stat:last-child { border-bottom: none; }
+    .card-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .card-num { font-size: 36px; }
+    .cta-inner { padding: 36px 24px; }
+    .checklist { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ─────────────────────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <div class="hero-inner">
+    <div class="eyebrow">
+      <span class="eyebrow-dot"></span>
+      Your personalized report is ready
+    </div>
+    <h1>Your AI Automation<br/><em>Opportunity Report</em></h1>
+    <p class="hero-sub">
+      Five workflows draining your accounting firm's time —
+      and exactly where AI plugs in to give you your hours back.
+    </p>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-num">40%</div>
+        <div class="stat-label">of firm time lost<br/>to manual tasks</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">11 hrs</div>
+        <div class="stat-label">saved per week<br/>per staff member</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">$28K+</div>
+        <div class="stat-label">avg annual value<br/>recaptured per firm</div>
+      </div>
+    </div>
+
+    <div class="scroll-cue">
+      <span>Scroll to explore</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── INTRO ─────────────────────────────────────────────────────────────────── -->
+<section>
+  <div class="section-label">Why This Report Exists</div>
+  <h2>Your firm is leaving time on the table.</h2>
+  <p class="intro-text">
+    Most accounting firms are run by sharp, experienced professionals who are also buried.
+    Not because they're disorganized — but because the work is relentless and the systems
+    haven't kept up.
+  </p>
+  <p class="intro-text">
+    <strong>AI doesn't fix bad processes.</strong> But it does eliminate the repetitive,
+    rules-based work that eats your team's time — so they can focus on what actually requires judgment.
+  </p>
+  <p class="intro-text">
+    Below are the five highest-impact workflows in accounting firms, where AI fits in each one,
+    and what you stand to recover. No hype. No tools list. Just a clear picture of the opportunity.
+  </p>
+</section>
+
+<!-- ── WORKFLOWS ─────────────────────────────────────────────────────────────── -->
+<section>
+  <div class="section-label">The Five Workflows</div>
+  <h2>Where your time is going —<br/>and how to get it back.</h2>
+
+  <div style="height:32px"></div>
+
+  <div class="workflows">
+
+    <!-- 01 -->
+    <div class="workflow-card">
+      <div class="card-header">
+        <div class="card-num">01</div>
+        <div class="card-meta">
+          <div class="card-title">Client Intake &amp; Onboarding</div>
+          <div class="tags">
+            <span class="tag tag-time">⏱ 6–8 hrs saved / client</span>
+            <span class="tag tag-high">● High Impact</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="problem-box">
+          <div class="box-label">The Problem</div>
+          <div class="box-text">Every new client means a flood of emails, PDF forms, missing signatures, and manual data entry. Staff spends hours chasing information before billable work can even begin.</div>
+        </div>
+        <div class="fix-box">
+          <div class="box-label">The AI Fix</div>
+          <div class="box-text">An AI intake system collects client data through a smart form, validates completeness, auto-populates your CRM or practice management tool, and sends personalized welcome sequences — without a single email from your team.</div>
+        </div>
+        <div class="tools-line"><strong>Tools:</strong> Make.com · Typeform · Claude AI</div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="workflow-card">
+      <div class="card-header">
+        <div class="card-num">02</div>
+        <div class="card-meta">
+          <div class="card-title">Document Collection &amp; Follow-Up</div>
+          <div class="tags">
+            <span class="tag tag-time">⏱ 3–5 hrs saved / client</span>
+            <span class="tag tag-high">● High Impact</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="problem-box">
+          <div class="box-label">The Problem</div>
+          <div class="box-text">Chasing clients for W-2s, 1099s, bank statements, and prior returns is one of the most time-consuming — and morale-draining — parts of tax season. It's manual, repetitive, and completely automatable.</div>
+        </div>
+        <div class="fix-box">
+          <div class="box-label">The AI Fix</div>
+          <div class="box-text">AI-powered follow-up sequences send personalized reminders at the right intervals, track what's been received vs. outstanding, and escalate only when human judgment is needed. Your team stops being a reminder system.</div>
+        </div>
+        <div class="tools-line"><strong>Tools:</strong> Make.com · Gmail API · Notion</div>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="workflow-card">
+      <div class="card-header">
+        <div class="card-num">03</div>
+        <div class="card-meta">
+          <div class="card-title">Tax Research &amp; Code Lookup</div>
+          <div class="tags">
+            <span class="tag tag-time">⏱ 45 min saved / research task</span>
+            <span class="tag tag-med">● Medium–High Impact</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="problem-box">
+          <div class="box-label">The Problem</div>
+          <div class="box-text">Even experienced tax professionals spend significant time researching IRC sections, IRS guidance, and case precedent for non-routine client situations. It's high-skill time spent on a research task.</div>
+        </div>
+        <div class="fix-box">
+          <div class="box-label">The AI Fix</div>
+          <div class="box-text">A purpose-built AI tax research tool lets your team describe a client scenario in plain language and instantly surface relevant IRC sections, regulations, and guidance — with citations. Research that took 45 minutes takes 4.</div>
+        </div>
+        <div class="tools-line"><strong>Tools:</strong> Claude AI · Custom RAG · IRC Database</div>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="workflow-card">
+      <div class="card-header">
+        <div class="card-num">04</div>
+        <div class="card-meta">
+          <div class="card-title">Compliance Monitoring &amp; Alerts</div>
+          <div class="tags">
+            <span class="tag tag-time">⏱ 2–4 hrs saved / week</span>
+            <span class="tag tag-med">● Medium Impact</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="problem-box">
+          <div class="box-label">The Problem</div>
+          <div class="box-text">Tax law changes constantly. IRS notices, state-level regulatory changes, and filing deadline shifts create ongoing monitoring burden. Missing one can mean penalties for your clients — and liability for your firm.</div>
+        </div>
+        <div class="fix-box">
+          <div class="box-label">The AI Fix</div>
+          <div class="box-text">Automated monitoring agents track IRS announcements, regulatory changes, and deadline shifts — and deliver summarized, prioritized alerts to the right team members. Your firm stays current without dedicating staff to it.</div>
+        </div>
+        <div class="tools-line"><strong>Tools:</strong> Make.com · Perplexity API · Slack</div>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="workflow-card">
+      <div class="card-header">
+        <div class="card-num">05</div>
+        <div class="card-meta">
+          <div class="card-title">Internal Reporting &amp; Status Updates</div>
+          <div class="tags">
+            <span class="tag tag-time">⏱ 3–5 hrs saved / week</span>
+            <span class="tag tag-med">● Medium Impact</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="problem-box">
+          <div class="box-label">The Problem</div>
+          <div class="box-text">Partners and managers spend hours every week pulling together status reports on open engagements, billing summaries, and client pipeline. It's critical information built manually from multiple sources.</div>
+        </div>
+        <div class="fix-box">
+          <div class="box-label">The AI Fix</div>
+          <div class="box-text">Automated reporting pipelines pull data from your practice management system, generate formatted status summaries, and deliver them on a schedule — so leadership has visibility without the manual build.</div>
+        </div>
+        <div class="tools-line"><strong>Tools:</strong> Make.com · Airtable · Google Sheets</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PDF DOWNLOAD ───────────────────────────────────────────────────────────── -->
+<div class="pdf-banner">
+  <div class="pdf-inner">
+    <div class="pdf-left">
+      <div class="pdf-icon">📄</div>
+      <div class="pdf-text">
+        <strong>Download the full report</strong>
+        Save or share this report with your team as a PDF
+      </div>
+    </div>
+    <a href="bayoubros_ai_report.pdf" download class="pdf-btn">
+      ↓ Download PDF
+    </a>
+  </div>
+</div>
+
+<!-- ── CTA ────────────────────────────────────────────────────────────────────── -->
+<div class="cta-section">
+  <div class="cta-inner">
+    <div class="section-label" style="color:var(--teal);margin-bottom:12px;">Ready to see this in your firm?</div>
+    <h2>Book Your Free<br/>AI Business Audit</h2>
+    <p class="cta-sub">
+      A 60-minute deep dive into your firm's workflows. You'll walk away with a prioritized roadmap
+      of exactly where AI fits — and what it's worth.
+    </p>
+
+    <div class="checklist">
+      <div class="check-item"><div class="check-icon">✓</div>Full audit of your top 5 time-draining workflows</div>
+      <div class="check-item"><div class="check-icon">✓</div>Prioritized AI implementation roadmap</div>
+      <div class="check-item"><div class="check-icon">✓</div>Estimated time and cost savings per system</div>
+      <div class="check-item"><div class="check-icon">✓</div>Build it yourself vs. done-for-you recommendation</div>
+      <div class="check-item"><div class="check-icon">✓</div>Recorded walkthrough to share with your team</div>
+      <div class="check-item"><div class="check-icon">✓</div>No pitch. No pressure. Just clarity.</div>
+    </div>
+
+    <a href="https://bayoubros.com/audit" class="cta-btn">
+      Book Your Free Audit
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <p class="no-pressure">No commitment required · Takes 2 minutes to schedule</p>
+  </div>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────────── -->
+<footer>
+  © 2025 Bayou Bros AI Automation · bayoubros.com<br/>
+  Results based on industry averages. Individual results vary.
+</footer>
+
+<script>
+  // Intersection observer for scroll-triggered card animations
+  const cards = document.querySelectorAll('.workflow-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(card => observer.observe(card));
+</script>
+</body>
+</html>

@@ -362,10 +362,20 @@ function App() {
                 Only 3 slots left this week
               </div>
             </a>
+            
+            
             <p style={{color: '#a8b8d0', fontSize: '14px', marginTop: '24px'}}>
               No sales pitch. Just a real conversation about your automation options.
             </p>
+            <a
+              href={`/report.html?task=${encodeURIComponent(formData.taskName)}&monthly=${Math.round(results.monthlyLoss)}&yearly=${Math.round(results.yearlyLoss)}&hours=${results.hoursPerYear}&weekly=${Math.round(results.weeklyLoss)}`}
+              style={{display: 'inline-block', marginTop: '16px', padding: '16px 40px', background: 'transparent', color: '#40E0D0', fontSize: '16px', fontWeight: 'bold', border: '2px solid #40E0D0', textDecoration: 'none', borderRadius: '12px'}}
+            >
+              📄 View Your Full AI Automation Report →
+            </a>
+
           </div>
+          
 
           {/* Email Confirmation */}
           <div style={{textAlign: 'center', marginTop: '32px', padding: '24px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px', border: '1px solid rgba(64, 224, 208, 0.1)'}}>
