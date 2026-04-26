@@ -32,64 +32,43 @@ function App() {
   });
   const [results, setResults] = useState<Results | null>(null);
 
-  const calculateROI = () => {
-    const hours = parseFloat(formData.hoursPerWeek);
-    const employees = parseFloat(formData.employees);
-    const rate = parseFloat(formData.hourlyRate);
-    
-    const weeklyLoss = hours * employees * rate;
-    const monthlyLoss = weeklyLoss * 4.33;
-    const yearlyLoss = monthlyLoss * 12;
-    
-    setResults({
-      weeklyLoss,
-      monthlyLoss,
-      yearlyLoss,
-      hoursPerYear: hours * employees * 52,
-    });
-    
-    setStep('results');
-  };
-
   const handleCalculatorSubmit = async () => {
     if (email && formData.taskName && formData.industry && formData.hourlyRate) {
-      trackEvent('calculation_completed', {
-        email: email,
-        task_name: formData.taskName,
-        industry: formData.industry,
-        employees: formData.employees,
-        hours_per_week: formData.hoursPerWeek,
-        hourly_rate: formData.hourlyRate
-      });
-      
-      calculateROI();
-      
-      // Send completed calculation to Google Forms
-      const hours = parseFloat(formData.hoursPerWeek);
-      const employees = parseFloat(formData.employees);
-      const rate = parseFloat(formData.hourlyRate);
-      const yearlyLoss = hours * employees * rate * 4.33 * 12;
-      
-      const googleFormData = new FormData();
-      googleFormData.append('entry.56006190', email);
-      googleFormData.append('entry.1413275017', formData.taskName);
-      googleFormData.append('entry.163271857', formData.hoursPerWeek);
-      googleFormData.append('entry.703334186', formData.hourlyRate);
-      googleFormData.append('entry.97022571', yearlyLoss.toFixed(2));
-      googleFormData.append('entry.340418493', new Date().toISOString());
-      googleFormData.append('entry.586988015', 'calculation_completed');
-      // Assuming new entries for industry and employees
-      googleFormData.append('entry.111111111', formData.industry);
-      googleFormData.append('entry.222222222', formData.employees);
-      
       try {
-        await fetch('https://docs.google.com/forms/d/e/1FAIpQLSdyI_K4RT0thZu9YWR4psocMxGiHR4MOQ9WWLkGbZmys2tjzA/formResponse', {
+        // Call backend API to calculate, save, and send email
+        const response = await fetch('/api/calculate-roi', {
           method: 'POST',
-          mode: 'no-cors',
-          body: googleFormData
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            taskName: formData.taskName,
+            industry: formData.industry,
+            employees: formData.employees,
+            hoursPerWeek: formData.hoursPerWeek,
+            hourlyRate: formData.hourlyRate,
+          }),
         });
+
+        if (!response.ok) {
+          throw new Error('Failed to calculate ROI');
+        }
+
+        const data = await response.json();
+        
+        trackEvent('calculation_completed', {
+          email: email,
+          task_name: formData.taskName,
+          industry: formData.industry,
+          employees: formData.employees,
+          hours_per_week: formData.hoursPerWeek,
+          hourly_rate: formData.hourlyRate
+        });
+
+        setResults(data.data);
+        setStep('results');
       } catch (error) {
-        console.log('Form submission error:', error);
+        console.error('Error calculating ROI:', error);
+        alert('Error sending your ROI report. Please try again.');
       }
     }
   };
@@ -310,10 +289,63 @@ function App() {
           </div>
           
 
+          {/* PDF Download Section */}
+          <div style={{textAlign: 'center', marginTop: '32px', display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap'}}>
+            <button
+              onClick={async () => {
+                try {
+                  const response = await fetch('/api/generate-pdf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      email,
+                      taskName: formData.taskName,
+                      industry: formData.industry,
+                      employees: formData.employees,
+                      hoursPerWeek: formData.hoursPerWeek,
+                      hourlyRate: formData.hourlyRate,
+                      weeklyLoss: results.weeklyLoss,
+                      monthlyLoss: results.monthlyLoss,
+                      yearlyLoss: results.yearlyLoss,
+                    }),
+                  });
+                  
+                  const blob = await response.blob();
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'ROI_Report.pdf';
+                  document.body.appendChild(a);
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                  document.body.removeChild(a);
+                  
+                  trackEvent('pdf_downloaded');
+                } catch (error) {
+                  console.error('Error downloading PDF:', error);
+                  alert('Error downloading PDF. Please try again.');
+                }
+              }}
+              style={{padding: '16px 32px', background: 'linear-gradient(135deg, #40E0D0 0%, #00CED1 100%)', color: '#1a2332', fontSize: '16px', fontWeight: 'bold', border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 8px 24px rgba(64, 224, 208, 0.3)', transition: 'all 0.3s'}}
+              onMouseOver={(e) => {
+                const target = e.target as HTMLButtonElement;
+                target.style.transform = 'translateY(-2px)';
+                target.style.boxShadow = '0 12px 32px rgba(64, 224, 208, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                const target = e.target as HTMLButtonElement;
+                target.style.transform = 'translateY(0)';
+                target.style.boxShadow = '0 8px 24px rgba(64, 224, 208, 0.3)';
+              }}
+            >
+              📥 Download PDF Report
+            </button>
+          </div>
+
           {/* Email Confirmation */}
           <div style={{textAlign: 'center', marginTop: '32px', padding: '24px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px', border: '1px solid rgba(64, 224, 208, 0.1)'}}>
             <p style={{color: '#a8b8d0', fontSize: '14px', margin: 0}}>
-              📧 A copy of your results has been sent to <strong style={{color: '#40E0D0'}}>{email}</strong>
+              📧 Your ROI report has been sent to <strong style={{color: '#40E0D0'}}>{email}</strong>
             </p>
           </div>
         </div>
