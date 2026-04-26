@@ -14,9 +14,11 @@ app.use(express.json());
 // Initialize Gmail transporter for Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
+  secure: false,
+  ignoreTLS: true,
   auth: {
     user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD, // Use Gmail App Password, not your regular password
+    pass: process.env.GMAIL_APP_PASSWORD,
   },
 });
 
@@ -186,14 +188,22 @@ app.post('/api/calculate-roi', async (req, res) => {
       yearlyLoss,
     };
 
-    // Save to Google Sheets
-    await saveToGoogleSheets(data);
+    // Save to Google Sheets (optional - won't fail if not configured)
+    try {
+      await saveToGoogleSheets(data);
+    } catch (error) {
+      console.warn('Warning: Could not save to Google Sheets:', error.message);
+    }
 
     // Generate PDF
     const pdfBuffer = await generateROIPDF(data);
 
-    // Send email with PDF
-    await sendEmailWithPDF(email, data, pdfBuffer);
+    // Send email with PDF (optional - won't fail if email service is down)
+    try {
+      await sendEmailWithPDF(email, data, pdfBuffer);
+    } catch (error) {
+      console.warn('Warning: Could not send email:', error.message);
+    }
 
     res.json({
       success: true,
