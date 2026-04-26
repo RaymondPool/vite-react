@@ -32,30 +32,6 @@ function App() {
   });
   const [results, setResults] = useState<Results | null>(null);
 
-  const handleEmailSubmit = async () => {
-    if (email) {
-      trackEvent('calculator_started', { email: email });
-      
-      // Send to Google Forms
-      const formData = new FormData();
-      formData.append('entry.56006190', email);
-      formData.append('entry.340418493', new Date().toISOString());
-      formData.append('entry.586988015', 'email_capture');
-      
-      try {
-        await fetch('https://docs.google.com/forms/d/e/1FAIpQLSdyI_K4RT0thZu9YWR4psocMxGiHR4MOQ9WWLkGbZmys2tjzA/formResponse', {
-          method: 'POST',
-          mode: 'no-cors',
-          body: formData
-        });
-      } catch (error) {
-        console.log('Form submission error:', error);
-      }
-      
-      setStep('calculator');
-    }
-  };
-
   const calculateROI = () => {
     const hours = parseFloat(formData.hoursPerWeek);
     const employees = parseFloat(formData.employees);
