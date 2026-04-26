@@ -149,9 +149,9 @@ function App() {
                 Which industry are you in?
               </label>
               <select
+                className="custom-select"
                 value={formData.industry}
                 onChange={(e) => setFormData({...formData, industry: e.target.value})}
-                style={{width: '100%', padding: '16px', fontSize: '16px', border: '2px solid rgba(64, 224, 208, 0.3)', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', color: '#fff', outline: 'none'}}
               >
                 <option value="">Select your industry</option>
                 <option value="Accounting">Accounting</option>
