@@ -14,12 +14,10 @@ app.use(express.json());
 // Initialize Gmail transporter for Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
-  secure: false,
-  ignoreTLS: true,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
-  },
+  }
 });
 
 // Initialize Google Sheets API
