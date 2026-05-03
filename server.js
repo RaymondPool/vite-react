@@ -22,10 +22,10 @@ const transporter = nodemailer.createTransport({
 
 // Initialize Google Sheets API
 const sheets = google.sheets('v4');
-const auth = new google.auth.GoogleAuth({
-  keyFile: process.env.GOOGLE_SERVICE_ACCOUNT_KEY,
-  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-});
+const authConfig = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+  ? { credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON), scopes: ['https://www.googleapis.com/auth/spreadsheets'] }
+  : { keyFile: process.env.GOOGLE_SERVICE_ACCOUNT_KEY, scopes: ['https://www.googleapis.com/auth/spreadsheets'] };
+const auth = new google.auth.GoogleAuth(authConfig);
 
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 const RANGE = 'Sheet1!A:G';

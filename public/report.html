@@ -24,6 +24,14 @@
     --border:   #DDE6EA;
   }
 
+  @media print {
+    .pdf-banner, footer, .cta-section { display: none !important; }
+    body { background: white !important; color: black !important; }
+    * { color: black !important; background: white !important; border-color: #ccc !important; }
+    .stat-num, h1 em { color: #00C2C7 !important; }
+    h1, h2 { color: #0D1B2A !important; }
+  }
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { scroll-behavior: smooth; }
@@ -610,9 +618,9 @@
         Save or share this report with your team as a PDF
       </div>
     </div>
-    <a href="bayoubros_ai_report.pdf" download class="pdf-btn">
+    <button onclick="window.print()" class="pdf-btn" style="border:none;cursor:pointer;">
       ↓ Download PDF
-    </a>
+    </button>
   </div>
 </div>
 
