@@ -173,14 +173,15 @@ async function sendEmailWithPDF(email, data, pdfBuffer) {
 
   // Fallback to Resend
   if (!resend) throw new Error('No email service configured');
-  await resend.emails.send({
+  const { data, error } = await resend.emails.send({
     from: 'Bayou Bros <onboarding@resend.dev>',
     to: email,
     subject: 'Your AI Automation ROI Report',
     html: htmlBody,
     attachments: [{ filename: 'ROI_Report.pdf', content: pdfBuffer.toString('base64'), contentType: 'application/pdf' }],
   });
-  console.log('Email sent via Resend to:', email);
+  if (error) throw new Error(`Resend error: ${JSON.stringify(error)}`);
+  console.log('Email sent via Resend to:', email, 'id:', data?.id);
 }
 
 // API endpoint to calculate and save ROI
