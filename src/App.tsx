@@ -36,7 +36,7 @@ function App() {
     if (email && formData.taskName && formData.industry && formData.hourlyRate) {
       try {
         // Call backend API to calculate, save, and send email
-        const response = await fetch('/api/calculate-roi', {
+        const response = await fetch('https://roi-calculator-backend-qbbd.onrender.com/api/calculate-roi', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -294,7 +294,7 @@ function App() {
             <button
               onClick={async () => {
                 try {
-                  const response = await fetch('/api/generate-pdf', {
+                  const response = await fetch('https://roi-calculator-backend-qbbd.onrender.com/api/generate-pdf', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
