@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import PDFDocument from 'pdfkit';
 import { google } from 'googleapis';
 import dotenv from 'dotenv';
@@ -11,14 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Initialize Gmail transporter for Nodemailer
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Initialize Google Sheets API
 const sheets = google.sheets('v4');
@@ -123,8 +116,8 @@ function generateROIPDF(data) {
 // Send email with PDF attachment
 async function sendEmailWithPDF(email, data, pdfBuffer) {
   try {
-    await transporter.sendMail({
-      from: process.env.GMAIL_USER,
+    await resend.emails.send({
+      from: 'Bayou Bros <onboarding@resend.dev>',
       to: email,
       subject: 'Your AI Automation ROI Report',
       html: `
@@ -137,13 +130,13 @@ async function sendEmailWithPDF(email, data, pdfBuffer) {
           <li>Yearly Loss: <strong>$${data.yearlyLoss.toFixed(2)}</strong></li>
         </ul>
         <p>Your complete report is attached. Ready to learn how AI can eliminate these costs?</p>
-        <p><a href="https://bayoubiz.systeme.io/c8ac11b7" style="background-color: #40E0D0; color: #1a2332; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">Schedule Your Strategy Call</a></p>
+        <p><a href="https://bayoubiz.systeme.io/c8ac11b7" style="background-color:#40E0D0;color:#1a2332;padding:12px 24px;text-decoration:none;border-radius:6px;display:inline-block;font-weight:bold;">Schedule Your Strategy Call</a></p>
         <p>Best,<br/>Bayou Bros Team</p>
       `,
       attachments: [
         {
           filename: 'ROI_Report.pdf',
-          content: pdfBuffer,
+          content: pdfBuffer.toString('base64'),
           contentType: 'application/pdf',
         },
       ],
