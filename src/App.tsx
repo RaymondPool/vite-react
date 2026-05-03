@@ -31,45 +31,52 @@ function App() {
     hourlyRate: '',
   });
   const [results, setResults] = useState<Results | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [validationError, setValidationError] = useState('');
 
   const handleCalculatorSubmit = async () => {
-    if (email && formData.taskName && formData.industry && formData.hourlyRate) {
-      try {
-        // Call backend API to calculate, save, and send email
-        const response = await fetch('https://roi-calculator-backend-qbbd.onrender.com/api/calculate-roi', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            taskName: formData.taskName,
-            industry: formData.industry,
-            employees: formData.employees,
-            hoursPerWeek: formData.hoursPerWeek,
-            hourlyRate: formData.hourlyRate,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to calculate ROI');
-        }
-
-        const data = await response.json();
-        
-        trackEvent('calculation_completed', {
-          email: email,
-          task_name: formData.taskName,
+    if (!email || !formData.taskName || !formData.industry || !formData.hourlyRate) {
+      setValidationError('Please fill in all fields before submitting.');
+      return;
+    }
+    setValidationError('');
+    setLoading(true);
+    try {
+      const response = await fetch('https://roi-calculator-backend-qbbd.onrender.com/api/calculate-roi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          taskName: formData.taskName,
           industry: formData.industry,
           employees: formData.employees,
-          hours_per_week: formData.hoursPerWeek,
-          hourly_rate: formData.hourlyRate
-        });
+          hoursPerWeek: formData.hoursPerWeek,
+          hourlyRate: formData.hourlyRate,
+        }),
+      });
 
-        setResults(data.data);
-        setStep('results');
-      } catch (error) {
-        console.error('Error calculating ROI:', error);
-        alert('Error sending your ROI report. Please try again.');
+      if (!response.ok) {
+        throw new Error('Failed to calculate ROI');
       }
+
+      const data = await response.json();
+
+      trackEvent('calculation_completed', {
+        email: email,
+        task_name: formData.taskName,
+        industry: formData.industry,
+        employees: formData.employees,
+        hours_per_week: formData.hoursPerWeek,
+        hourly_rate: formData.hourlyRate
+      });
+
+      setResults(data.data);
+      setStep('results');
+    } catch (error) {
+      console.error('Error calculating ROI:', error);
+      setValidationError('Something went wrong. Please try again in a moment.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -187,11 +194,17 @@ function App() {
               </p>
             </div>
 
+            {validationError && (
+              <p style={{color: '#ff6b6b', fontSize: '14px', marginBottom: '12px', textAlign: 'center'}}>
+                {validationError}
+              </p>
+            )}
             <button
               onClick={handleCalculatorSubmit}
-              style={{width: '100%', padding: '18px', background: 'linear-gradient(135deg, #40E0D0 0%, #00CED1 100%)', color: '#1a2332', fontSize: '18px', fontWeight: 'bold', border: 'none', borderRadius: '12px', cursor: 'pointer', boxShadow: '0 8px 24px rgba(64, 224, 208, 0.3)'}}
+              disabled={loading}
+              style={{width: '100%', padding: '18px', background: loading ? 'rgba(64, 224, 208, 0.5)' : 'linear-gradient(135deg, #40E0D0 0%, #00CED1 100%)', color: '#1a2332', fontSize: '18px', fontWeight: 'bold', border: 'none', borderRadius: '12px', cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 8px 24px rgba(64, 224, 208, 0.3)'}}
             >
-              Show Me What I'm Losing
+              {loading ? 'Calculating... (this may take a moment)' : "Show Me What I'm Losing"}
             </button>
           </div>
         </div>
