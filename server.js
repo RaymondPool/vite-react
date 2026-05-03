@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Initialize Google Sheets API
 const sheets = google.sheets('v4');
@@ -115,6 +115,7 @@ function generateROIPDF(data) {
 
 // Send email with PDF attachment
 async function sendEmailWithPDF(email, data, pdfBuffer) {
+  if (!resend) throw new Error('RESEND_API_KEY not configured');
   try {
     await resend.emails.send({
       from: 'Bayou Bros <onboarding@resend.dev>',
