@@ -28,7 +28,7 @@ const authConfig = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
 const auth = new google.auth.GoogleAuth(authConfig);
 
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
-const RANGE = 'Sheet1!A:G';
+const RANGE = 'Sheet1!A:H';
 
 // Save calculation to Google Sheets
 async function saveToGoogleSheets(data) {
