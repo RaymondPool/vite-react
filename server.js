@@ -13,6 +13,16 @@ app.use(express.json());
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
+// Gmail API OAuth2 client
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GMAIL_CLIENT_ID,
+  process.env.GMAIL_CLIENT_SECRET,
+  'https://developers.google.com/oauthplayground'
+);
+if (process.env.GMAIL_REFRESH_TOKEN) {
+  oauth2Client.setCredentials({ refresh_token: process.env.GMAIL_REFRESH_TOKEN });
+}
+
 // Initialize Google Sheets API
 const sheets = google.sheets('v4');
 const serviceAccountJSON = process.env.GOOGLE_SERVICE_ACCOUNT_JSON || process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
@@ -115,39 +125,62 @@ function generateROIPDF(data) {
 
 // Send email with PDF attachment
 async function sendEmailWithPDF(email, data, pdfBuffer) {
-  if (!resend) throw new Error('RESEND_API_KEY not configured');
-  try {
-    await resend.emails.send({
-      from: 'Bayou Bros <onboarding@resend.dev>',
-      to: email,
-      subject: 'Your AI Automation ROI Report',
-      html: `
-        <h2>Hey there! 👋</h2>
-        <p>Thanks for calculating your ROI with Bayou Bros.</p>
-        <p><strong>Here's what you're losing:</strong></p>
-        <ul>
-          <li>Weekly Loss: <strong>$${data.weeklyLoss.toFixed(2)}</strong></li>
-          <li>Monthly Loss: <strong>$${data.monthlyLoss.toFixed(2)}</strong></li>
-          <li>Yearly Loss: <strong>$${data.yearlyLoss.toFixed(2)}</strong></li>
-        </ul>
-        <p>Your complete report is attached. Ready to learn how AI can eliminate these costs?</p>
-        <p><a href="https://bayoubiz.systeme.io/c8ac11b7" style="background-color:#40E0D0;color:#1a2332;padding:12px 24px;text-decoration:none;border-radius:6px;display:inline-block;font-weight:bold;">Schedule Your Strategy Call</a></p>
-        <p>Best,<br/>Bayou Bros Team</p>
-      `,
-      attachments: [
-        {
-          filename: 'ROI_Report.pdf',
-          content: pdfBuffer.toString('base64'),
-          contentType: 'application/pdf',
-        },
-      ],
-    });
+  const htmlBody = `
+    <h2>Hey there! 👋</h2>
+    <p>Thanks for calculating your ROI with Bayou Bros.</p>
+    <p><strong>Here's what you're losing:</strong></p>
+    <ul>
+      <li>Weekly Loss: <strong>$${data.weeklyLoss.toFixed(2)}</strong></li>
+      <li>Monthly Loss: <strong>$${data.monthlyLoss.toFixed(2)}</strong></li>
+      <li>Yearly Loss: <strong>$${data.yearlyLoss.toFixed(2)}</strong></li>
+    </ul>
+    <p>Your complete report is attached. Ready to learn how AI can eliminate these costs?</p>
+    <p><a href="https://bayoubiz.systeme.io/c8ac11b7" style="background-color:#40E0D0;color:#1a2332;padding:12px 24px;text-decoration:none;border-radius:6px;display:inline-block;font-weight:bold;">Schedule Your Strategy Call</a></p>
+    <p>Best,<br/>Bayou Bros Team</p>
+  `;
 
-    console.log('Email sent to:', email);
-  } catch (error) {
-    console.error('Error sending email:', error);
-    throw error;
+  // Use Gmail API if OAuth2 credentials are configured
+  if (process.env.GMAIL_REFRESH_TOKEN) {
+    const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
+    const boundary = 'boundary_bayoubros';
+    const pdfBase64 = pdfBuffer.toString('base64');
+
+    const rawMessage = [
+      `To: ${email}`,
+      `From: Bayou Bros <bayou.biz.25@gmail.com>`,
+      `Subject: Your AI Automation ROI Report`,
+      `MIME-Version: 1.0`,
+      `Content-Type: multipart/mixed; boundary="${boundary}"`,
+      ``,
+      `--${boundary}`,
+      `Content-Type: text/html; charset="UTF-8"`,
+      ``,
+      htmlBody,
+      `--${boundary}`,
+      `Content-Type: application/pdf; name="ROI_Report.pdf"`,
+      `Content-Transfer-Encoding: base64`,
+      `Content-Disposition: attachment; filename="ROI_Report.pdf"`,
+      ``,
+      pdfBase64,
+      `--${boundary}--`,
+    ].join('\n');
+
+    const encoded = Buffer.from(rawMessage).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    await gmail.users.messages.send({ userId: 'me', requestBody: { raw: encoded } });
+    console.log('Email sent via Gmail API to:', email);
+    return;
   }
+
+  // Fallback to Resend
+  if (!resend) throw new Error('No email service configured');
+  await resend.emails.send({
+    from: 'Bayou Bros <onboarding@resend.dev>',
+    to: email,
+    subject: 'Your AI Automation ROI Report',
+    html: htmlBody,
+    attachments: [{ filename: 'ROI_Report.pdf', content: pdfBuffer.toString('base64'), contentType: 'application/pdf' }],
+  });
+  console.log('Email sent via Resend to:', email);
 }
 
 // API endpoint to calculate and save ROI
