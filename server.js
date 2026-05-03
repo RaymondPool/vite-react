@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { Resend } from 'resend';
+import sgMail from '@sendgrid/mail';
 import PDFDocument from 'pdfkit';
 import { google } from 'googleapis';
 import dotenv from 'dotenv';
@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+if (process.env.SENDGRID_API_KEY) sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Gmail API OAuth2 client
 const oauth2Client = new google.auth.OAuth2(
@@ -171,17 +171,16 @@ async function sendEmailWithPDF(email, data, pdfBuffer) {
     return;
   }
 
-  // Fallback to Resend
-  if (!resend) throw new Error('No email service configured');
-  const { data, error } = await resend.emails.send({
-    from: 'Bayou Bros <onboarding@resend.dev>',
+  // Fallback to SendGrid
+  if (!process.env.SENDGRID_API_KEY) throw new Error('No email service configured');
+  await sgMail.send({
+    from: { name: 'Bayou Bros', email: 'bayou.biz.25@gmail.com' },
     to: email,
     subject: 'Your AI Automation ROI Report',
     html: htmlBody,
-    attachments: [{ filename: 'ROI_Report.pdf', content: pdfBuffer.toString('base64'), contentType: 'application/pdf' }],
+    attachments: [{ filename: 'ROI_Report.pdf', content: pdfBuffer.toString('base64'), type: 'application/pdf', disposition: 'attachment' }],
   });
-  if (error) throw new Error(`Resend error: ${JSON.stringify(error)}`);
-  console.log('Email sent via Resend to:', email, 'id:', data?.id);
+  console.log('Email sent via SendGrid to:', email);
 }
 
 // API endpoint to calculate and save ROI
