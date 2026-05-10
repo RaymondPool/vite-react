@@ -94,7 +94,7 @@ npm run server:dev
 npm run server
 ```
 
-The server will run on `http://localhost:5000`
+The server will run on `https://roi-calculator-backend-qbbd.onrender.com`
 
 ### Step 7: Update Frontend API Calls
 
